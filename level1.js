@@ -4,12 +4,12 @@ class FlashcardPronunciationChecker {
             alert('Speech recognition is not supported in this browser. Please use Chrome.');
             return;
         }
-        
+
         this.recognition = new webkitSpeechRecognition();
         this.recognition.lang = 'zh-CN';
         this.recognition.continuous = false;
         this.recognition.interimResults = false;
-        
+
         this.audioContext = null;
         this.analyzer = null;
         this.volumeData = null;
@@ -18,16 +18,16 @@ class FlashcardPronunciationChecker {
 
     async initialize() {
         if (this.isInitialized) return true;
-        
+
         try {
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.audioContext = new (window.AudioContext || window.AudioContext)();
             this.analyzer = this.audioContext.createAnalyser();
             this.volumeData = new Uint8Array(this.analyzer.frequencyBinCount);
-            
+
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const source = this.audioContext.createMediaStreamSource(stream);
             source.connect(this.analyzer);
-            
+
             this.isInitialized = true;
             return true;
         } catch (error) {
@@ -37,41 +37,39 @@ class FlashcardPronunciationChecker {
         }
     }
 
-    startAssessment(card) {
-        return new Promise(async (resolve, reject) => {
-            if (!await this.initialize()) {
-                reject('Failed to initialize audio system');
-                return;
-            }
+    async startAssessment(card) {
+        if (!await this.initialize()) {
+            throw new Error('Failed to initialize audio system');
+        }
 
-            let volumeReadings = [];
-            let startTime = Date.now();
-            
-            // Start volume visualization
-            const visualizeInterval = setInterval(() => {
-                this.analyzer.getByteFrequencyData(this.volumeData);
-                const average = this.volumeData.reduce((a, b) => a + b) / this.volumeData.length;
-                volumeReadings.push(average);
-                this.updateVolumeDisplay(average, card.id);
-            }, 100);
+        let volumeReadings = [];
+        let startTime = Date.now();
 
+        const visualizeInterval = setInterval(() => {
+            this.analyzer.getByteFrequencyData(this.volumeData);
+            const average = this.volumeData.reduce((a, b) => a + b) / this.volumeData.length;
+            volumeReadings.push(average);
+            this.updateVolumeDisplay(average, card.id);
+        }, 100);
+
+        return new Promise((resolve, reject) => {
             this.recognition.onresult = (event) => {
                 clearInterval(visualizeInterval);
                 const transcript = event.results[0][0].transcript;
                 const confidence = event.results[0][0].confidence;
                 const duration = (Date.now() - startTime) / 1000;
-                
+
                 const fluencyScore = this.calculateFluencyScore(volumeReadings, duration);
                 const accuracyScore = this.calculateAccuracyScore(transcript, card.traditional);
-                
+
                 resolve({
-                    transcript: transcript,
+                    transcript,
                     pronunciation: Math.round((fluencyScore + accuracyScore + (confidence * 100)) / 3),
                     details: {
                         fluency: Math.round(fluencyScore),
                         accuracy: Math.round(accuracyScore),
                         confidence: Math.round(confidence * 100),
-                        duration: duration
+                        duration
                     }
                 });
             };
@@ -85,23 +83,22 @@ class FlashcardPronunciationChecker {
         });
     }
 
-    calculateFluencyScore(volumeReadings, duration) {
+    calculateFluencyScore(volumeReadings, _duration) {
         const avgVolume = volumeReadings.reduce((a, b) => a + b, 0) / volumeReadings.length;
         const volumeVariance = volumeReadings.reduce((a, b) => a + Math.abs(b - avgVolume), 0) / volumeReadings.length;
         return Math.max(0, Math.min(100, 100 - (volumeVariance / 2)));
     }
-    
+
     calculateAccuracyScore(transcript, reference) {
         const maxLength = Math.max(transcript.length, reference.length);
         let matches = 0;
-        
+
         for (let i = 0; i < maxLength; i++) {
             if (transcript[i] === reference[i]) matches++;
         }
-        
+
         return (matches / maxLength) * 100;
     }
-    
 
     updateVolumeDisplay(volume, cardId) {
         const meter = document.querySelector(`#volume-meter-${cardId}`);
@@ -109,11 +106,146 @@ class FlashcardPronunciationChecker {
             meter.style.height = `${Math.min(100, volume / 2)}%`;
             meter.style.display = 'block';
         }
-    }    
+    }
 }
 
+// Flashcard Flip Functions
+function createFlashcard(card) {
+    const flashcard = document.createElement("div");
+    flashcard.classList.add("thecard");
+
+    const front = document.createElement("div");
+    front.classList.add("thefront");
+    front.innerHTML = `
+        <h2>${card.traditional}</h2>
+        <p>Pinyin: ${card.pinyin}</p>
+        <p>Bopomofo: ${card.bopomofo}</p>
+        <div class="button-group">
+            <button class="sound-button" onclick="event.preventDefault(); event.stopPropagation(); speakChinese('${card.traditional}')">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <button class="record-button">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+        <div class="volume-meter" id="volume-meter-${card.id}"></div>
+        <div class="score-display"></div>
+    `;
+
+    const back = document.createElement("div");
+    back.classList.add("theback");
+    back.innerHTML = `<h2>${card.english}</h2>`;
+
+    flashcard.appendChild(front);
+    flashcard.appendChild(back);
+
+    front.querySelector('.record-button').addEventListener('click', (e) => handlePronunciationCheck(e, card));
+    flashcard.addEventListener('click', (e) => {
+        if (!e.target.closest('.sound-button') && !e.target.closest('.record-button')) {
+            flashcard.classList.toggle('flipped');
+        }
+    });
+
+    return flashcard;
+}
+
+// Record Functions
+async function handlePronunciationCheck(event, card) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const cardElement = document.querySelector(`#flashcard-${card.id}`);
+    const recordButton = cardElement.querySelector('.record-button');
+    const scoreDisplay = cardElement.querySelector('.score-display');
+    const volumeMeter = cardElement.querySelector('.volume-meter');
+
+    try {
+        recordButton.classList.add('recording');
+        volumeMeter.style.display = 'block';
+
+        const result = await pronunciationChecker.startAssessment(card);
+
+        scoreDisplay.innerHTML = `
+            <div class="score-main">Score: ${result.pronunciation}%</div>
+            <div class="score-details">
+                <div>Fluency: ${result.details.fluency}%</div>
+                <div>Accuracy: ${result.details.accuracy}%</div>
+                <div>Confidence: ${result.details.confidence}%</div>
+            </div>
+        `;
+        scoreDisplay.style.display = 'block';
+    } catch (error) {
+        console.error('Pronunciation check failed:', error);
+        alert('Failed to record pronunciation. Please ensure microphone access is granted.');
+    } finally {
+        recordButton.classList.remove('recording');
+        volumeMeter.style.display = 'none';
+    }
+}
+
+// Play Sound Function
+function speakChinese(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-TW';
+    utterance.rate = 0.8;
+
+    const voices = window.speechSynthesis.getVoices();
+    const chineseVoice = voices.find(voice => voice.lang.includes('zh'));
+    if (chineseVoice) utterance.voice = chineseVoice;
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// Pagination and Initialization
+function displayCurrentPage() {
+    const container = document.getElementById("flashcardContainer");
+    container.innerHTML = '';
+    const startIndex = currentPage * cardsPerPage;
+    const endIndex = Math.min(startIndex + cardsPerPage, flashcards.length);
+
+    for (let i = startIndex; i < endIndex; i++) {
+        container.appendChild(createFlashcard(flashcards[i]));
+    }
+    updateNavigationState();
+}
+
+function updateNavigationState() {
+    const prevButton = document.querySelector('button[onclick="showPreviousCards()"]');
+    const nextButton = document.querySelector('button[onclick="showNextCards()"]');
+
+    prevButton.disabled = currentPage === 0;
+    nextButton.disabled = (currentPage + 1) * cardsPerPage >= flashcards.length;
+}
+
+function showNextCards() {
+    if ((currentPage + 1) * cardsPerPage < flashcards.length) {
+        currentPage++;
+        displayCurrentPage();
+    }
+}
+
+function showPreviousCards() {
+    if (currentPage > 0) {
+        currentPage--;
+        displayCurrentPage();
+    }
+}
+
+window.onload = function () {
+    window.speechSynthesis.getVoices();
+    if ('speechSynthesis' in window) {
+        displayCurrentPage();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = displayCurrentPage;
+        }
+    } else {
+        alert("Sorry, your browser doesn't support text to speech! Please try using a modern browser like Chrome or Firefox.");
+    }
+};
+
 const flashcards = [
-    { traditional: "一", pinyin: "Yī", bopomofo: "ㄧ", english: "1" },
+   { traditional: "一", pinyin: "Yī", bopomofo: "ㄧ", english: "1" },
     { traditional: "二", pinyin: "Èr", bopomofo: "ㄦ", english: "2" },
     { traditional: "三", pinyin: "Sān", bopomofo: "ㄙㄢ", english: "3" },
     { traditional: "四", pinyin: "Sì", bopomofo: "ㄙˋ", english: "4" },
@@ -134,177 +266,9 @@ const flashcards = [
     { traditional: "沒關係", pinyin: "Méi guān xì", bopomofo: "ㄇㄟˊ ㄍㄨㄢ ㄒㄧˋ", english: "It's Okay", description: "A respond to an apology" },
     { traditional: "我叫", pinyin: "Wǒ jiào", bopomofo: "ㄨㄛˇ ㄐㄧㄠˋ", english: "My name is", description: "Used to introduce oneself" }
 ];
-
-// Initialize the pronunciation checker
 const pronunciationChecker = new FlashcardPronunciationChecker();
-
-
 let currentPage = 0;
 const cardsPerPage = 4;
-
-
-
-// Function to speak Chinese text using Web Spzeech API
-function speakChinese(text) {
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'zh-TW'; // Taiwanese Mandarin
-    utterance.rate = 0.8; // Slightly slower for learning
-    
-    // Ensure voices are loaded before speaking
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length > 0) {
-        // Try to find a Chinese voice
-        const chineseVoice = voices.find(voice => voice.lang.includes('zh'));
-        if (chineseVoice) {
-            utterance.voice = chineseVoice;
-        }
-    }
-    
-    window.speechSynthesis.speak(utterance);
-}
-
-// Function to handle pronunciation recording and assessment
-async function handlePronunciationCheck(event, card) {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    const cardElement = document.querySelector(`#flashcard-${card.id}`);
-    const recordButton = cardElement.querySelector('.record-button');
-    const scoreDisplay = cardElement.querySelector('.score-display');
-    const volumeMeter = cardElement.querySelector('.volume-meter');
-    
-    try {
-        recordButton.classList.add('recording');
-        volumeMeter.style.display = 'block';
-        
-        const result = await pronunciationChecker.startAssessment(card);
-        
-        scoreDisplay.innerHTML = `
-            <div class="score-main">Score: ${result.pronunciation}%</div>
-            <div class="score-details">
-                <div>Fluency: ${result.details.fluency}%</div>
-                <div>Accuracy: ${result.details.accuracy}%</div>
-                <div>Confidence: ${result.details.confidence}%</div>
-            </div>
-        `;
-        scoreDisplay.style.display = 'block';
-    } catch (error) {
-        console.error('Pronunciation check failed:', error);
-        alert('Failed to record pronunciation. Please ensure microphone access is granted.');
-    } finally {
-        recordButton.classList.remove('recording');
-        volumeMeter.style.display = 'none';
-    }
-}
-
-
-// Function to generate a single flashcard
-function createFlashcard(card) {
-    const flashcard = document.createElement("div");
-    flashcard.classList.add("thecard");
-
-    const front = document.createElement("div");
-    front.classList.add("thefront");
-    front.innerHTML = `
-        <h2>${card.traditional}</h2>
-        <p>Pinyin: ${card.pinyin}</p>
-        <p>Bopomofo: ${card.bopomofo}</p>
- <div class="button-group">
-            <button class="sound-button" onclick="event.preventDefault(); event.stopPropagation(); speakChinese('${card.traditional}')">
-                <i class="fas fa-volume-up"></i>
-            </button>
-            <button class="record-button">
-                <i class="fas fa-microphone"></i>
-            </button>
-        </div>
-        <div class="volume-meter" id="volume-meter-${card.id}"></div>
-        <div class="score-display"></div>
-    `;
-
-    const back = document.createElement("div");
-    back.classList.add("theback");
-    back.innerHTML = `
-        <h2>${card.english}</h2>
-        ${card.description ? `<p><em>${card.description}</em></p>` : ''}  
-    `;
-
-    flashcard.appendChild(front);
-    flashcard.appendChild(back);
-    
-     // Add click handlers after the elements are created
-     const recordButton = front.querySelector('.record-button');
-     recordButton.addEventListener('click', (e) => handlePronunciationCheck(e, card));
-
-    flashcard.addEventListener('click', (e) => {
-        // Only flip if not clicking buttons
-        if (!e.target.closest('.sound-button') && !e.target.closest('.record-button')) {
-            flashcard.classList.toggle('flipped');
-        }
-    });
-
-    return flashcard;
-}
-
-// Function to display current page of flashcards
-function displayCurrentPage() {
-    const container = document.getElementById("flashcardContainer");
-    container.innerHTML = ''; // Clear current cards
-
-    const startIndex = currentPage * cardsPerPage;
-    const endIndex = Math.min(startIndex + cardsPerPage, flashcards.length);
-    
-    for (let i = startIndex; i < endIndex; i++) {
-        const flashcard = createFlashcard(flashcards[i]);
-        container.appendChild(flashcard);
-    }
-
-    updateNavigationState();
-}
-
-// Function to update navigation buttons state
-function updateNavigationState() {
-    const prevButton = document.querySelector('button[onclick="showPreviousCards()"]');
-    const nextButton = document.querySelector('button[onclick="showNextCards()"]');
-    
-    prevButton.disabled = currentPage === 0;
-    nextButton.disabled = (currentPage + 1) * cardsPerPage >= flashcards.length;
-}
-
-// Navigation functions
-function showNextCards() {
-    if ((currentPage + 1) * cardsPerPage < flashcards.length) {
-        currentPage++;
-        displayCurrentPage();
-    }
-}
-
-function showPreviousCards() {
-    if (currentPage > 0) {
-        currentPage--;
-        displayCurrentPage();
-    }
-}
-
-// Initialize flashcards on page load
-window.onload = function() {
-    // Load voices
-    window.speechSynthesis.getVoices();
-    
-    // Check if speech synthesis is supported
-    if ('speechSynthesis' in window) {
-        displayCurrentPage();
-        
-        // Force load voices for Chrome
-        if (window.speechSynthesis.onvoiceschanged !== undefined) {
-            window.speechSynthesis.onvoiceschanged = displayCurrentPage;
-        }
-    } else {
-        alert("Sorry, your browser doesn't support text to speech! Please try using a modern browser like Chrome or Firefox.");
-    }
-};
 
 // Dialogue Game State
 let currentDialogueIndex = 0;
@@ -408,7 +372,7 @@ function startGame() {
 }
 
 // Function to handle typewriter effect
-function typewriterEffect(text, element, speed = 50) {
+function typewriterEffect(text, element, speed = 20) {
     return new Promise(resolve => {
         isTyping = true;
         element.textContent = '';
