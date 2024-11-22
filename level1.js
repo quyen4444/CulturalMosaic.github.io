@@ -412,23 +412,43 @@ function typewriterEffect(text, element, speed = 20) {
 
 async function startDialogue() {
     const currentDialogue = dialogueData[currentDialogueIndex];
-    const dialogueElement = document.getElementById('dialogueText');
+    const dialogueTextElement = document.getElementById('dialogueText');
+    const contextElement = document.getElementById('contextText');
+    const questionElement = document.getElementById('questionText');
     const choicesContainer = document.getElementById('choicesContainer');
     const continueButton = document.getElementById('continueButton');
 
-    // Update scene image (check if scene exists)
+    // Reset content
+    dialogueTextElement.textContent = '';
+    contextElement.textContent = '';
+    questionElement.textContent = '';
+    choicesContainer.innerHTML = '';
+    continueButton.classList.add('hidden');
+
+    // Update scene image if it exists
     if (currentDialogue.scene) {
         document.getElementById('sceneImage').src = currentDialogue.scene;
     }
 
-    // Type out the dialogue
-    await typewriterEffect(currentDialogue.npcText + '\n' + (currentDialogue.context || ''), dialogueElement);
+    // Type out the NPC text
+    await typewriterEffect(currentDialogue.npcText, dialogueTextElement);
 
-      // Check if there are choices
-      if (currentDialogue.choices && currentDialogue.choices.length > 0) {
+    // Add context in italics if it exists
+    if (currentDialogue.context) {
+        contextElement.textContent = currentDialogue.context;
+        contextElement.style.fontStyle = 'italic';
+    }
+
+    // Add question in bold if it exists
+    if (currentDialogue.question) {
+        questionElement.textContent = currentDialogue.question;
+        questionElement.style.fontWeight = 'bold';
+    }
+
+    // Display choices if they exist, otherwise show the "Next" button
+    if (currentDialogue.choices && currentDialogue.choices.length > 0) {
         displayChoices(currentDialogue.choices);
     } else {
-        // Show the "Next" button directly if no choices
         continueButton.classList.remove('hidden');
     }
 }
