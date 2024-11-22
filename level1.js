@@ -410,26 +410,41 @@ function typewriterEffect(text, element, speed = 20) {
     });
 }
 
-// Function to start dialogue
 async function startDialogue() {
     const currentDialogue = dialogueData[currentDialogueIndex];
     const dialogueElement = document.getElementById('dialogueText');
-    
-    // Update scene image
-    document.getElementById('sceneImage').src = currentDialogue.scene;
-    
+    const choicesContainer = document.getElementById('choicesContainer');
+    const continueButton = document.getElementById('continueButton');
+
+    // Update scene image (check if scene exists)
+    if (currentDialogue.scene) {
+        document.getElementById('sceneImage').src = currentDialogue.scene;
+    }
+
     // Type out the dialogue
-    await typewriterEffect(currentDialogue.npcText + '\n' + currentDialogue.context, dialogueElement);
-    
-    // Show choices after typing is complete
-    displayChoices(currentDialogue.choices);
+    await typewriterEffect(currentDialogue.npcText + '\n' + (currentDialogue.context || ''), dialogueElement);
+
+      // Check if there are choices
+      if (currentDialogue.choices && currentDialogue.choices.length > 0) {
+        displayChoices(currentDialogue.choices);
+    } else {
+        // Show the "Next" button directly if no choices
+        continueButton.classList.remove('hidden');
+    }
 }
 
 // Function to display choices
 function displayChoices(choices) {
     const choicesContainer = document.getElementById('choicesContainer');
-    choicesContainer.innerHTML = '';
+    const continueButton = document.getElementById('continueButton');
     
+    // Clear previous choices
+    choicesContainer.innerHTML = '';
+
+    // Hide "Next" button while displaying choices
+    continueButton.classList.add('hidden');
+
+    // Add choice buttons
     choices.forEach(choice => {
         const button = document.createElement('button');
         button.className = 'choice-button';
@@ -483,10 +498,12 @@ document.getElementById('continueButton').addEventListener('click', () => {
         return;
     }
     
-    // Reset UI elements
-    document.getElementById('feedbackMessage').className = 'feedback-message';
-    document.getElementById('continueButton').classList.add('hidden');
-    
-    // Start next dialogue
-    startDialogue();
+     // Reset UI elements
+     document.getElementById('feedbackMessage').className = 'feedback-message';
+     document.getElementById('feedbackMessage').textContent = '';
+     document.getElementById('choicesContainer').innerHTML = '';
+     document.getElementById('continueButton').classList.add('hidden');
+ 
+     // Start next dialogue
+     startDialogue();
 });
