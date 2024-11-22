@@ -9,103 +9,110 @@ class FlashcardPronunciationChecker {
         this.recognition.lang = 'zh-CN';
         this.recognition.continuous = false;
         this.recognition.interimResults = false;
-
-        this.audioContext = null;
-        this.analyzer = null;
-        this.volumeData = null;
-        this.isInitialized = false;
+        this.isRecording = false;
+        
+        // Set up recognition handlers in constructor
+        this.recognition.onend = () => {
+            this.isRecording = false;
+            this.currentButton?.classList.remove('recording');
+        };
     }
 
-    async initialize() {
-        if (this.isInitialized) return true;
+    toggleRecording(card, scoreDisplay, recordButton) {
+        if (this.isRecording) {
+            this.recognition.stop();
+            this.isRecording = false;
+            recordButton.classList.remove('recording');
+            return;
+        }
 
+        this.isRecording = true;
+        this.currentButton = recordButton;  // Store current button reference
+        recordButton.classList.add('recording');
+
+        // Clear previous results
+        scoreDisplay.innerHTML = 'Listening...';
+
+        // Set up recognition handlers
+        this.recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            const confidence = event.results[0][0].confidence;
+            
+            console.log('Transcript:', transcript);  // Debug log
+            console.log('Target:', card.traditional);  // Debug log
+
+            // Calculate character-based accuracy
+            const accuracyScore = this.calculateAccuracyScore(transcript, card.traditional);
+            
+            // Calculate final score (weighted average of accuracy and confidence)
+            const confidenceScore = confidence * 100;
+            const finalScore = Math.round((accuracyScore * 0.7) + (confidenceScore * 0.3));
+
+            // Display detailed results
+            scoreDisplay.innerHTML = `
+                <div class="score-results">
+                    <div class="final-score">Score: ${finalScore}%</div>
+                    <div class="score-details">
+                        <div>You said: ${transcript}</div>
+                        <div>Target: ${card.traditional}</div>
+                        <div>Accuracy: ${Math.round(accuracyScore)}%</div>
+                        <div>Confidence: ${Math.round(confidenceScore)}%</div>
+                    </div>
+                </div>
+            `;
+        };
+
+        this.recognition.onerror = (error) => {
+            console.error('Recognition error:', error);
+            scoreDisplay.innerHTML = 'Error occurred during recognition. Please try again.';
+            this.isRecording = false;
+            recordButton.classList.remove('recording');
+        };
+
+        // Start recognition
         try {
-            this.audioContext = new (window.AudioContext || window.AudioContext)();
-            this.analyzer = this.audioContext.createAnalyser();
-            this.volumeData = new Uint8Array(this.analyzer.frequencyBinCount);
-
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const source = this.audioContext.createMediaStreamSource(stream);
-            source.connect(this.analyzer);
-
-            this.isInitialized = true;
-            return true;
-        } catch (error) {
-            console.error('Failed to initialize audio:', error);
-            alert('Microphone access is required. Please allow microphone access and try again.');
-            return false;
-        }
-    }
-
-    async startAssessment(card) {
-        if (!await this.initialize()) {
-            throw new Error('Failed to initialize audio system');
-        }
-
-        let volumeReadings = [];
-        let startTime = Date.now();
-
-        const visualizeInterval = setInterval(() => {
-            this.analyzer.getByteFrequencyData(this.volumeData);
-            const average = this.volumeData.reduce((a, b) => a + b) / this.volumeData.length;
-            volumeReadings.push(average);
-            this.updateVolumeDisplay(average, card.id);
-        }, 100);
-
-        return new Promise((resolve, reject) => {
-            this.recognition.onresult = (event) => {
-                clearInterval(visualizeInterval);
-                const transcript = event.results[0][0].transcript;
-                const confidence = event.results[0][0].confidence;
-                const duration = (Date.now() - startTime) / 1000;
-
-                const fluencyScore = this.calculateFluencyScore(volumeReadings, duration);
-                const accuracyScore = this.calculateAccuracyScore(transcript, card.traditional);
-
-                resolve({
-                    transcript,
-                    pronunciation: Math.round((fluencyScore + accuracyScore + (confidence * 100)) / 3),
-                    details: {
-                        fluency: Math.round(fluencyScore),
-                        accuracy: Math.round(accuracyScore),
-                        confidence: Math.round(confidence * 100),
-                        duration
-                    }
-                });
-            };
-
-            this.recognition.onerror = (event) => {
-                clearInterval(visualizeInterval);
-                reject(event.error);
-            };
-
             this.recognition.start();
-        });
-    }
-
-    calculateFluencyScore(volumeReadings, _duration) {
-        const avgVolume = volumeReadings.reduce((a, b) => a + b, 0) / volumeReadings.length;
-        const volumeVariance = volumeReadings.reduce((a, b) => a + Math.abs(b - avgVolume), 0) / volumeReadings.length;
-        return Math.max(0, Math.min(100, 100 - (volumeVariance / 2)));
+        } catch (error) {
+            console.error('Recognition start error:', error);
+            scoreDisplay.innerHTML = 'Error starting recognition. Please try again.';
+            this.isRecording = false;
+            recordButton.classList.remove('recording');
+        }
     }
 
     calculateAccuracyScore(transcript, reference) {
-        const maxLength = Math.max(transcript.length, reference.length);
-        let matches = 0;
-
-        for (let i = 0; i < maxLength; i++) {
-            if (transcript[i] === reference[i]) matches++;
-        }
-
-        return (matches / maxLength) * 100;
+        // Convert both strings to arrays of characters
+        const transcriptChars = transcript.replace(/\s+/g, '').split('');
+        const referenceChars = reference.replace(/\s+/g, '').split('');
+        
+        // Use Levenshtein distance for more accurate comparison
+        const distance = this.levenshteinDistance(transcriptChars.join(''), referenceChars.join(''));
+        const maxLength = Math.max(transcriptChars.length, referenceChars.length);
+        
+        // Convert distance to similarity score
+        const similarity = (maxLength - distance) / maxLength;
+        return similarity * 100;
     }
 
-    updateVolumeDisplay(volume, cardId) {
-        const meter = document.querySelector(`#volume-meter-${cardId}`);
-        if (meter) {
-            meter.style.height = `${Math.min(100, volume / 2)}%`;
-            meter.style.display = 'block';
+    levenshteinDistance(str1, str2) {
+        const matrix = Array(str2.length + 1).fill(null)
+            .map(() => Array(str1.length + 1).fill(null));
+
+        for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
+        for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
+
+        for (let j = 1; j <= str2.length; j++) {
+            for (let i = 1; i <= str1.length; i++) {
+                const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
+                matrix[j][i] = Math.min(
+                    matrix[j][i - 1] + 1,
+                    matrix[j - 1][i] + 1,
+                    matrix[j - 1][i - 1] + indicator
+                );
+            }
         }
+
+        return matrix[str2.length][str1.length];
     }
 }
 
@@ -128,7 +135,6 @@ function createFlashcard(card) {
                 <i class="fas fa-microphone"></i>
             </button>
         </div>
-        <div class="volume-meter" id="volume-meter-${card.id}"></div>
         <div class="score-display"></div>
     `;
 
@@ -138,13 +144,22 @@ function createFlashcard(card) {
 
     flashcard.appendChild(front);
     flashcard.appendChild(back);
+    const recordButton = front.querySelector('.record-button');
+    const scoreDisplay = front.querySelector('.score-display');
+    recordButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();  // Prevent card flip when clicking record button
+        pronunciationChecker.toggleRecording(card, scoreDisplay, recordButton);
+    });
 
-    front.querySelector('.record-button').addEventListener('click', (e) => handlePronunciationCheck(e, card));
-    flashcard.addEventListener('click', (e) => {
-        if (!e.target.closest('.sound-button') && !e.target.closest('.record-button')) {
+    flashcard.addEventListener('click', (event) => {
+        // Only flip if we're not recording and didn't click the record or sound button
+        const isButtonClick = event.target.closest('.record-button, .sound-button');
+        if (!pronunciationChecker.isRecording && !isButtonClick) {
             flashcard.classList.toggle('flipped');
         }
     });
+
 
     return flashcard;
 }
