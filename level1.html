@@ -32,37 +32,41 @@
       </script>
       
 
-<section id="dialogue-game-section" class="hidden">
-    <div class="game-container">
+      <section id="dialogue-game-section" class="hidden">
+        <div class="game-container">
+            <!-- Scene Background -->
+            <div class="scene-background">
+                <img id="sceneImage" src="taiwan-airport-lobby.jpg" alt="Taoyuan Airport Lobby">
+            </div>
     
-        <div class="scene-background">
-            <img id="sceneImage" src="taiwan-airport-lobby.jpg" alt="Taoyuan Airport Lobby">
-        </div>
-
-
-        <div class="dialogue-container">
-            <div class="dialogue-box">
-                <div class="speaker-name">Mei Lin</div>
-                <div class="dialogue-text" id="dialogueText"></div>
-                <button class="audio-button" id="audioButton">
-                    <span class="audio-icon">🔊</span>
-                </button>
+            <!-- Dialogue Container -->
+            <div class="dialogue-container">
+                <div class="dialogue-box">
+                    <div class="speaker-name">Mei Lin</div>
+                    <!-- NPC Dialogue Text -->
+                    <div class="dialogue-text" id="dialogueText"></div>
+                    <!-- Context Text -->
+                    <div class="context-text" id="contextText"></div>
+                    <!-- Question Text -->
+                    <div class="question-text" id="questionText"></div>
+                    <!-- Audio Button -->
+                    <button class="audio-button" id="audioButton">
+                        <span class="audio-icon">🔊</span>
+                    </button>
+                </div>
+            </div>
+    
+            <!-- Choices Container -->
+            <div class="choices-container" id="choicesContainer"></div>
+    
+            <!-- Feedback Message -->
+            <div class="feedback-message" id="feedbackMessage"></div>
+    
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <button class="continue-button hidden" id="continueButton">Continue</button>
             </div>
         </div>
-
-
-        <div class="choices-container" id="choicesContainer">
-        </div>
-
-        <div class="feedback-message" id="feedbackMessage"></div>
-
-
-        <div class="game-controls">
-            <button class="continue-button hidden" id="continueButton">Continue</button>
-            
-        </div>
-    </div>
-</section>
-<script src="level1.js"></script>
-</body>
-</html>
+    </section>
+    <script src="level1.js"></script>
+    
