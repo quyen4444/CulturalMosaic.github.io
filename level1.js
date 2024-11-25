@@ -292,7 +292,7 @@ let isTyping = false;
 // Dialogue Data
 const dialogueData = [
     {
-        scene: 'airport-lobby.jpg',
+        scene: 'https://cdn.crtkl.com/wp-content/uploads/sites/1/2021/01/taiwan-airport-duty-free-02.jpg',
         npcText: '你好！歡迎來到台灣',
         context: '*The NPC greets the player warmly as they exit customs.*',
         question: 'What is Mei Lin saying?',
