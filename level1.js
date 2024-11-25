@@ -1,3 +1,26 @@
+function showSection(sectionId) {
+    // Hide all sections
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => section.classList.add('hidden'));
+
+    // Show the selected section
+    const activeSection = document.getElementById(sectionId);
+    activeSection.classList.remove('hidden');
+
+    // Optional: Reset the game state if moving to a new section
+    if (sectionId === 'quiz-section') {
+        currentDialogueIndex = 0; // Reset the dialogue game state
+        startDialogue();         // Restart the dialogue
+    } else if (sectionId === 'flashcard-section') {
+        displayCurrentPage();    // Refresh flashcard display
+    }
+}
+
+// Initialize by showing the flashcard section by default
+window.onload = function () {
+    showSection('flashcard-section');
+};
+
 class FlashcardPronunciationChecker {
     constructor() {
         if (!('webkitSpeechRecognition' in window)) {
