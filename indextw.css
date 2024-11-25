@@ -1,78 +1,99 @@
+:root {
+  --black: #000000; 
+  --blue: #4eafe7;
+  --light_blue: #76b5c2; 
+  --ocean_blue: #17109e; 
+  --text_color: #000000; 
+  --white: #ffffff; 
+  --max-width: 1200px; 
+}
+
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+  min-height: 100vh; /* Minimum height of viewport */
+  font-family: "Sour Gummy", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
-  header {
-    background-color: #43978D;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 100;
-  }
+}
+
+
+a {
+  text-decoration: none; 
+}
+
+nav {
+  display: flex;
+  width: 210px;
+  height: 600px;
+  position: fixed;
+  top: 0;
+  left: 10px;
+  background-color: var(--white);
+  z-index: 100;
+  border-radius: 20px;
+  z-index: 5;
+}
+
+.nav_content {
+  margin: 20px;
+  padding: 2 rem 1 rem;
+}
+
+nav .my_logo a {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--black);
+  transition: 0.3s;
+}
+
+nav .my_logo a:hover {
+  color: var(--light_blue);
+}
+.my_logo {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  margin-left: 33px;
+}
+
+
+.container {
+  background-color: var(--black);
+}
+.home {
+  background: var(--black);
+  border-radius: 30px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 18px;
+
+}
+
+.home a {
+  font-size: 1.1 rem;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--white);
+  transition: 0.3s;
+}
+
+.home a:hover {
+  border-bottom-color: var(--ocean_blue);
+  color: var(--light_blue);
+}
+
+.home img {
+  width: 36px;
+  margin-right: 30px;
+  margin-left: 10px;
+  margin-top: 1px;
   
-  nav ul {
-    display: flex;
-    justify-content: center;
-    list-style-type: none;
-    margin: 0;
-    padding: 1rem;
-  }
-  
-  nav a {
-    color: #fff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    margin: 0 1rem;
-  }
-  
-  nav a:hover {
-    background-color: #FF6347;
-    border-radius: 5px;
-  }
-  
-  .hero {
-    background-image: url('https://mrwallpaper.com/images/hd/spring-and-autumn-pavilion-in-taiwan-pif0bpjcji5so2vv.jpg');
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    padding: 20px;
-    margin-top: 60px; /* To avoid overlap with fixed header */
-  }
-  
-  .hero h2 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-  }
-  
-  .hero p {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    max-width: 600px;
-  }
-  
-  .hero button {
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    background-color: #FF6347;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .hero button:hover {
-    background-color: #E5533C;
-  }
+}
 
   .level-selector {
     position: relative;
