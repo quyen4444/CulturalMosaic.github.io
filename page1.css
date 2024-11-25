@@ -1,0 +1,277 @@
+ :root {
+            --black: #000000; 
+            --blue: #4eafe7;
+            --light_blue: #76b5c2; 
+            --ocean_blue: #17109e; 
+            --text_color: #000000; 
+            --white: #ffffff; 
+            --max-width: 1200px; 
+        }
+        
+        
+        body {
+            min-height: 100vh; /* Minimum height of viewport */
+            font-family: "Sour Gummy", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+
+        a {
+            text-decoration: none; 
+          }
+          
+        nav {
+            display: flex;
+            width: 210px;
+            height: 600px;
+            position: fixed;
+            top: 0;
+            left: 10px;
+            background-color: var(--white);
+            z-index: 100;
+            border-radius: 20px;
+            z-index: 5;
+        }
+
+        .nav_content {
+            margin: 20px;
+            padding: 2 rem 1 rem;
+        }
+
+        nav .my_logo a {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--black);
+            transition: 0.3s;
+        }
+
+        nav .my_logo a:hover {
+            color: var(--light_blue);
+        }
+        .my_logo {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            margin-left: 33px;
+        }
+
+        
+        .container {
+            background-color: var(--black);
+        }
+        .home {
+            background: var(--black);
+            border-radius: 30px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            margin-top: 40px;
+            margin-bottom: 18px;
+
+        }
+
+        .home a {
+            font-size: 1.1 rem;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--white);
+            transition: 0.3s;
+        }
+
+        .home a:hover {
+            border-bottom-color: var(--ocean_blue);
+            color: var(--light_blue);
+        }
+
+        .home img {
+            width: 36px;
+            margin-right: 30px;
+            margin-left: 10px;
+            margin-top: 1px;
+            
+        }
+
+        .card {
+            background: var(--black);
+            border-radius: 30px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+        }
+
+        .card a {
+            font-size: 1.1 rem;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--white);
+            transition: 0.3s;
+        }
+
+        .card a:hover {
+            border-bottom-color: var(--light_blue);
+            color: var(--light_blue);
+        }
+
+        .card img {
+            width: 35px;
+            margin-right: 20px;
+            margin-left: 10px;
+            margin-top: 1px;
+            
+        }
+
+        .game {
+            background: var(--black);
+            border-radius: 30px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+        }
+        
+        .game a {
+            font-size: 1.1 rem;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--white);
+            transition: 0.3s;
+        }
+
+        .game a:hover {
+            border-bottom-color: var(--ocean_blue);
+            color: var(--light_blue);
+        }
+
+        .game img {
+            width: 36px;
+            margin-right: 27px;
+            margin-left: 12px;
+            margin-top: 1px;
+            
+        }
+
+        .quiz {
+            background: var(--black);
+            border-radius: 30px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            
+
+        }
+
+        .quiz a {
+            font-size: 1.1 rem;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+      
+        .quiz img {
+            width: 30px;
+            margin-right: 32px;
+            margin-left: 14px;
+            margin-top: 1px;
+            
+        }
+
+        .quiz a:hover {
+            border-bottom-color: var(--ocean_blue);
+            color: var(--light_blue);
+        }
+
+        .return {
+            background: var(--black);
+            border-radius: 100%;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            margin-left: 37px;
+        }
+
+        .return a {
+            font-size: 1.1 rem;
+            text-decoration: none;
+            font-weight: 600;
+            color: var(--white);
+            margin-left: 20px;
+        }
+
+        .return a:hover {
+            border-bottom-color: var(--ocean_blue);
+            color: var(--light_blue);
+        }
+
+        .container {
+            width: 700px;
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .content img {
+            width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+
+        button {
+            font-family: "Sour Gummy", sans-serif;
+            width: 50px; /* Set a fixed width */
+            height: 50px; /* Set a fixed height */
+            font-size: 17px;
+            font-weight: 500;
+            border: none;
+            border-radius: 0; /* Make buttons square */
+            color: rgb(255, 255, 255);
+            background-color: var(--black);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: absolute; /* Allow absolute positioning */
+            z-index: 10;
+            border-radius: 100%;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2d3436;
+            font-size: 2.5em;
+        }
+    
+
+        .iframe-container {
+            width: 300px; /* Set the width of the small window */
+            height: 200px; /* Set the height of the small window */
+            border: 2px solid #ccc; /* Optional border styling */
+            overflow: hidden; /* Hide overflow content */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
