@@ -1,141 +1,108 @@
-function showSection(sectionId) {
-    // Hide all sections
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(section => section.classList.add('hidden'));
-
-    // Show the selected section
-    const activeSection = document.getElementById(sectionId);
-    activeSection.classList.remove('hidden');
-
-    // Optional: Reset the game state if moving to a new section
-    if (sectionId === 'quiz-section') {
-        currentDialogueIndex = 0; // Reset the dialogue game state
-        startDialogue();         // Restart the dialogue
-    } else if (sectionId === 'flashcard-section') {
-        displayCurrentPage();    // Refresh flashcard display
-    }
-}
-
-// Initialize by showing the flashcard section by default
-window.onload = function () {
-    showSection('flashcard-section');
-};
-
 class FlashcardPronunciationChecker {
     constructor() {
         if (!('webkitSpeechRecognition' in window)) {
             alert('Speech recognition is not supported in this browser. Please use Chrome.');
             return;
         }
-
         this.recognition = new webkitSpeechRecognition();
         this.recognition.lang = 'zh-CN';
         this.recognition.continuous = false;
         this.recognition.interimResults = false;
-        this.isRecording = false;
-        
-        // Set up recognition handlers in constructor
-        this.recognition.onend = () => {
-            this.isRecording = false;
-            this.currentButton?.classList.remove('recording');
-        };
     }
 
     toggleRecording(card, scoreDisplay, recordButton) {
+        // Stop if already recording
         if (this.isRecording) {
             this.recognition.stop();
-            this.isRecording = false;
-            recordButton.classList.remove('recording');
             return;
         }
 
+        // Reset state
         this.isRecording = true;
-        this.currentButton = recordButton;  // Store current button reference
         recordButton.classList.add('recording');
+        scoreDisplay.textContent = 'Listening...';
 
-        // Clear previous results
-        scoreDisplay.innerHTML = 'Listening...';
-
-        // Set up recognition handlers
+        // Comprehensive result handling
         this.recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            const confidence = event.results[0][0].confidence;
-            
-            console.log('Transcript:', transcript);  // Debug log
-            console.log('Target:', card.traditional);  // Debug log
+            if (event.results.length > 0) {
+                const transcript = event.results[0][0].transcript.trim();
+                const confidence = event.results[0][0].confidence;
 
-            // Calculate character-based accuracy
-            const accuracyScore = this.calculateAccuracyScore(transcript, card.traditional);
-            
-            // Calculate final score (weighted average of accuracy and confidence)
-            const confidenceScore = confidence * 100;
-            const finalScore = Math.round((accuracyScore * 0.7) + (confidenceScore * 0.3));
-
-            // Display detailed results
-            scoreDisplay.innerHTML = `
-                <div class="score-results">
-                    <div class="final-score">Score: ${finalScore}%</div>
-                    <div class="score-details">
-                        <div>You said: ${transcript}</div>
-                        <div>Target: ${card.traditional}</div>
-                        <div>Accuracy: ${Math.round(accuracyScore)}%</div>
-                        <div>Confidence: ${Math.round(confidenceScore)}%</div>
-                    </div>
-                </div>
-            `;
+                if (transcript) {
+                    this.processTranscript(transcript, card.traditional, scoreDisplay, confidence);
+                } else {
+                    scoreDisplay.textContent = 'No speech detected. Try again.';
+                }
+            }
         };
 
-        this.recognition.onerror = (error) => {
-            console.error('Recognition error:', error);
-            scoreDisplay.innerHTML = 'Error occurred during recognition. Please try again.';
-            this.isRecording = false;
-            recordButton.classList.remove('recording');
+        // Error and end state handlers
+        this.recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            scoreDisplay.textContent = 'Recognition error. Please try again.';
+            this.resetRecording(recordButton);
+        };
+
+        this.recognition.onend = () => {
+            this.resetRecording(recordButton);
         };
 
         // Start recognition
         try {
             this.recognition.start();
         } catch (error) {
-            console.error('Recognition start error:', error);
-            scoreDisplay.innerHTML = 'Error starting recognition. Please try again.';
-            this.isRecording = false;
-            recordButton.classList.remove('recording');
+            console.error('Start recognition error:', error);
+            scoreDisplay.textContent = 'Failed to start recognition.';
+            this.resetRecording(recordButton);
         }
     }
 
-    calculateAccuracyScore(transcript, reference) {
-        // Convert both strings to arrays of characters
-        const transcriptChars = transcript.replace(/\s+/g, '').split('');
-        const referenceChars = reference.replace(/\s+/g, '').split('');
+    processTranscript(transcript, reference, scoreDisplay, confidence) {
+        const accuracyDetails = this.calculateAccuracy(transcript, reference);
         
-        // Use Levenshtein distance for more accurate comparison
-        const distance = this.levenshteinDistance(transcriptChars.join(''), referenceChars.join(''));
-        const maxLength = Math.max(transcriptChars.length, referenceChars.length);
-        
-        // Convert distance to similarity score
-        const similarity = (maxLength - distance) / maxLength;
-        return similarity * 100;
+        const finalScore = Math.round(
+            (accuracyDetails.characterAccuracy * 0.7) + 
+            (confidence * 100 * 0.3)
+        );
+
+        scoreDisplay.innerHTML = `
+            <div class="score-results">
+                <div class="final-score">Score: ${finalScore}%</div>
+                <div class="score-details">
+                    <div>You said: ${transcript}</div>
+                    <div>Target: ${reference}</div>
+                    <div>Matched: ${accuracyDetails.matchedCharacters.join('')}</div>
+                    <div>Accuracy: ${Math.round(accuracyDetails.characterAccuracy)}%</div>
+                </div>
+            </div>
+        `;
     }
 
-    levenshteinDistance(str1, str2) {
-        const matrix = Array(str2.length + 1).fill(null)
-            .map(() => Array(str1.length + 1).fill(null));
+    calculateAccuracy(transcript, reference) {
+        const t = transcript.replace(/\s+/g, '');
+        const r = reference.replace(/\s+/g, '');
 
-        for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
-        for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
+        if (t === r) return { characterAccuracy: 100, matchedCharacters: r.split('') };
 
-        for (let j = 1; j <= str2.length; j++) {
-            for (let i = 1; i <= str1.length; i++) {
-                const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
-                matrix[j][i] = Math.min(
-                    matrix[j][i - 1] + 1,
-                    matrix[j - 1][i] + 1,
-                    matrix[j - 1][i - 1] + indicator
-                );
+        const matchedCharacters = [];
+        let workingRef = r;
+
+        for (let char of t.split('')) {
+            const index = workingRef.indexOf(char);
+            if (index !== -1) {
+                matchedCharacters.push(char);
+                workingRef = workingRef.slice(0, index) + workingRef.slice(index + 1);
             }
         }
 
-        return matrix[str2.length][str1.length];
+        const characterAccuracy = (matchedCharacters.length / Math.max(t.length, r.length)) * 100;
+
+        return { characterAccuracy, matchedCharacters };
+    }
+
+    resetRecording(recordButton) {
+        this.isRecording = false;
+        recordButton.classList.remove('recording');
     }
 }
 
@@ -193,13 +160,21 @@ async function handlePronunciationCheck(event, card) {
     event.stopPropagation();
 
     const cardElement = document.querySelector(`#flashcard-${card.id}`);
+    if (!cardElement) {
+        console.error('Card element not found:', card.id);
+        return;
+    }
+
     const recordButton = cardElement.querySelector('.record-button');
     const scoreDisplay = cardElement.querySelector('.score-display');
-    const volumeMeter = cardElement.querySelector('.volume-meter');
+    if (!recordButton || !scoreDisplay) {
+        console.error('Required elements not found:', { recordButton, scoreDisplay });
+        return;
+    }
 
     try {
         recordButton.classList.add('recording');
-        volumeMeter.style.display = 'block';
+        scoreDisplay.textContent = 'Processing...';
 
         const result = await pronunciationChecker.startAssessment(card);
 
@@ -214,12 +189,12 @@ async function handlePronunciationCheck(event, card) {
         scoreDisplay.style.display = 'block';
     } catch (error) {
         console.error('Pronunciation check failed:', error);
-        alert('Failed to record pronunciation. Please ensure microphone access is granted.');
+        alert(`Failed to record pronunciation. Error: ${error.message || 'Unknown error'}`);
     } finally {
         recordButton.classList.remove('recording');
-        volumeMeter.style.display = 'none';
     }
 }
+
 
 // Play Sound Function
 function speakChinese(text) {
@@ -379,7 +354,7 @@ const dialogueData = [
         npcText: 'Another great spot is 日月潭, or Sun Moon Lake. It’s famous for its crystal-clear water and scenic mountain views.',
     },
     {
-        npcText: 'And if you’re into history, the National Palace Museum is full of amazing artifacts from ancient Chinese dynasties.',    },
+        npcText: 'And if you’re into history, the National Palace Museum is full of amazing artifacts from ancient Chinese dynasties.',},
     {
         npcText: 'Alright, here’s your hotel.',
         question: 'What does “xiè xiè” mean?',
@@ -416,6 +391,9 @@ function typewriterEffect(text, element, speed = 20) {
         element.textContent = '';
         let i = 0;
         
+          // Ensure text is properly encoded
+          const sanitizedText = text.normalize('NFKC'); 
+          
         function type() {
             if (i < text.length) {
                 element.textContent += text.charAt(i);
@@ -442,11 +420,18 @@ async function startDialogue() {
     const continueButton = document.getElementById('continueButton');
 
     // Reset content
-    dialogueTextElement.textContent = '';
-    contextElement.textContent = '';
-    questionElement.textContent = '';
-    choicesContainer.innerHTML = '';
-    continueButton.classList.add('hidden');
+      dialogueTextElement.textContent = '';
+      contextElement.textContent = '';
+      questionElement.textContent = '';
+      choicesContainer.innerHTML = '';
+      
+      // Explicitly hide choices container when no choices are present
+      if (!currentDialogue.choices || currentDialogue.choices.length === 0) {
+          choicesContainer.style.visibility = 'hidden';
+          choicesContainer.style.display = 'none';
+      }
+      
+      continueButton.classList.add('hidden');
 
     // Update scene image if it exists
     if (currentDialogue.scene) {
@@ -476,25 +461,27 @@ async function startDialogue() {
     }
 }
 
-// Function to display choices
+// Function to display choices as a pop-up
 function displayChoices(choices) {
     const choicesContainer = document.getElementById('choicesContainer');
     const continueButton = document.getElementById('continueButton');
     
-    // Clear previous choices
-    choicesContainer.innerHTML = '';
-
-    // Hide "Next" button while displaying choices
-    continueButton.classList.add('hidden');
-
-    // Add choice buttons
-    choices.forEach(choice => {
-        const button = document.createElement('button');
-        button.className = 'choice-button';
-        button.textContent = `${choice.id}. ${choice.text}`;
-        button.onclick = () => handleChoice(choice);
-        choicesContainer.appendChild(button);
-    });
+     // Clear previous choices and ensure visibility
+     choicesContainer.innerHTML = '';
+     choicesContainer.style.visibility = 'visible';
+     choicesContainer.style.display = 'block';
+     
+     // Hide "Next" button while displaying choices
+     continueButton.classList.add('hidden');
+ 
+     // Add choice buttons
+     choices.forEach(choice => {
+         const button = document.createElement('button');
+         button.className = 'choice-button';
+         button.textContent = `${choice.id}. ${choice.text}`;
+         button.onclick = () => handleChoice(choice);
+         choicesContainer.appendChild(button);
+     });
 }
 
 // Function to handle choice selection
@@ -502,6 +489,7 @@ function handleChoice(choice) {
     const currentDialogue = dialogueData[currentDialogueIndex];
     const feedbackElement = document.getElementById('feedbackMessage');
     const continueButton = document.getElementById('continueButton');
+    const choicesContainer = document.getElementById('choicesContainer');
     
     // Disable all choice buttons
     document.querySelectorAll('.choice-button').forEach(button => {
@@ -513,11 +501,17 @@ function handleChoice(choice) {
         currentDialogue.feedback.correct : 
         currentDialogue.feedback.incorrect;
     feedbackElement.className = `feedback-message ${choice.correct ? 'correct' : 'incorrect'}`;
+    feedbackElement.style.display = 'block';
+    
+    // Hide the choices container after selection
+    setTimeout(() => {
+        choicesContainer.style.visibility = 'hidden';
+        choicesContainer.style.display = 'none';
+    }, 1000);
     
     // Show continue button
     continueButton.classList.remove('hidden');
 }
-
 
 // Function to play audio
 function playAudio(audioFile) {
