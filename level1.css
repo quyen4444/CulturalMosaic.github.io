@@ -121,7 +121,6 @@ body {
     opacity: 0.8;
 }
   
-
 .button-group {
         display: flex;
         gap: 10px;
@@ -178,7 +177,7 @@ body {
     }
 
 
-/* Main game container */
+/* Main game container DIALOGUE STARTS HERE */
 .game-container {
     position: relative;
     width: 100%;
@@ -206,6 +205,13 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+#sceneImage {
+    max-width: 100%;
+    height: auto;
+    display: none; /* Hidden by default */
+    margin-bottom: 1em;
 }
 
 /* Character and Dialogue */
@@ -311,20 +317,23 @@ body {
     margin: 10px 20px;
     border-radius: 5px;
     display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
-.feedback-message.correct {
-    background: #e8f5e9;
+.feedback-message.correct {   
     color: #2e7d32;
-    display: block;
 }
 
 .feedback-message.incorrect {
-    background: #ffebee;
     color: #c62828;
-    display: block;
 }
 
+.feedback-message.correct, .feedback-message.incorrect {
+    opacity: 1;
+    background: #e8f5e9;
+    display: block;
+}
 
 /* Navigation Controls */
 .game-controls {

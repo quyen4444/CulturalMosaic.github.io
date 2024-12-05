@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Taiwan: Language Adventure</title>
+    <link rel="stylesheet" href="level1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Level Selection Buttons -->
+    <div id="level-buttons" class="level-buttons">
+        <button 
+            id="startButton" 
+            class="level-button"
+            style="top: 345px; left: 373px;" 
+            onclick="alert('Level 5 not available yet')">
+            Start
+        </button>
+        <button 
+            id="level1Button" 
+            class="level-button"
+            style="top: 320px; left: 525px;" 
+            onclick="handleLevelClick(1)">
+            1
+        </button>
+        <button 
+            id="level2Button" 
+            class="level-button level-locked" 
+            style="top: 500px; left: 440px;" 
+            onclick="handleLevelClick(2)">
+            2
+        </button>
+        <button 
+            id="level3Button" 
+            class="level-button level-locked" 
+            style="top: 640px; left: 650px;" 
+            onclick="handleLevelClick(3)">
+            3
+        </button>
+        <button 
+            id="level4Button" 
+            class="level-button level-locked" 
+            style="top: 740px; left: 500px;" 
+            onclick="handleLevelClick(4)">
+            4
+        </button>
+        <button 
+            id="level5Button" 
+            class="level-button level-locked" 
+            style="top: 840px; left: 570px;" 
+            onclick="handleLevelClick(5)">
+            5
+        </button>
+        
+        <!-- Return to Index Page Button -->
+        <button 
+            id="returnToIndex" 
+            class="level-button"
+            style="top: 920px; left: 570px;" 
+            onclick="redirectToIndex()">
+            Home
+        </button>
+    </div>
+
+    <!-- Flashcard Section -->
+    <section id="flashcard-section" class="flashcard-section" style="display: none;">
+        <div class="flashcard-container" id="flashcardContainer"></div>
+        <div class="control-buttons">
+            <div class="navigation-row">
+                <button class="nav-button" onclick="showPreviousCards()">Previous</button>
+                <button class="nav-button" onclick="showNextCards()">Next</button>
+            </div>
+            <button class="skip-button" onclick="redirectToDialogue()">Skip to Game</button>
+        </div>
+
+        <!-- Return to Level Selection Button -->
+        <button class="return-button" onclick="returnToLevels()">Back to Levels</button>
+    </section>
+
+    <style>.return-button {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #f39c12;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .return-button:hover {
+        background-color: #e67e22;
+    }
+    </style>
+
+ <script>// Redirect to index page
+    function redirectToIndex() {
+        window.location.href = 'index.html'; // Update with the correct path to your index page
+    }
+    function redirectToDialogue() {
+        window.location.href = 'dialogue.html';
+    }
+    // Return to levels view
+    function returnToLevels() {
+        // Hide flashcard section
+        const flashcardSection = document.getElementById('flashcard-section');
+        flashcardSection.style.display = 'none';
+    
+        // Show level buttons
+        const levelButtons = document.getElementById('level-buttons');
+        levelButtons.style.display = 'block';
+    }
+    </script>
+    <script src="flashcard.js"></script>
+</body>
+</html>

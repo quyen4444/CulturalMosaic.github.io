@@ -1,0 +1,70 @@
+{
+    "levels": {
+      "1": [
+        { "traditional": "一", "pinyin": "Yī", "bopomofo": "ㄧ", "english": "1" },
+        { "traditional": "二", "pinyin": "Èr", "bopomofo": "ㄦ", "english": "2" },
+        { "traditional": "三", "pinyin": "Sān", "bopomofo": "ㄙㄢ", "english": "3" },
+        { "traditional": "四", "pinyin": "Sì", "bopomofo": "ㄙˋ", "english": "4" },
+        { "traditional": "五", "pinyin": "Wǔ", "bopomofo": "ㄨˇ", "english": "5" },
+        { "traditional": "六", "pinyin": "Liù", "bopomofo": "ㄌㄧㄡˋ", "english": "6" },
+        { "traditional": "七", "pinyin": "Qī", "bopomofo": "ㄑㄧ", "english": "7" },
+        { "traditional": "八", "pinyin": "Bā", "bopomofo": "ㄅㄚ", "english": "8" },
+        { "traditional": "九", "pinyin": "Jiǔ", "bopomofo": "ㄐㄧㄡˇ", "english": "9" },
+        { "traditional": "十", "pinyin": "Shí", "bopomofo": "ㄕˊ", "english": "10" },
+        { "traditional": "你好", "pinyin": "Nǐ hǎo", "bopomofo": "ㄋㄧˇ ㄏㄠˇ", "english": "Hello" },
+        { "traditional": "歡迎", "pinyin": "Huān yíng", "bopomofo": "ㄏㄨㄢ ㄧㄥˊ", "english": "Welcome" },
+        { "traditional": "是", "pinyin": "Shì", "bopomofo": "ㄕˋ", "english": "Yes" },
+        { "traditional": "不是", "pinyin": "Bù shì", "bopomofo": "ㄅㄨˊ ㄕˋ", "english": "No" },
+        { "traditional": "謝謝", "pinyin": "Xiè xiè", "bopomofo": "ㄒㄧㄝˋ ㄒㄧㄝˋ", "english": "Thank You" },
+        { "traditional": "不客氣", "pinyin": "Bù kè qì", "bopomofo": "ㄅㄨˋ ㄎㄜˋ ㄑㄧˋ", "english": "You're Welcome", "description": "A response to thank you" },
+        { "traditional": "不會", "pinyin": "Bù huì", "bopomofo": "ㄅㄨˋ ㄏㄨㄟˋ", "english": "No trouble at all", "description":"Also response to thank you, but only have this meaning in Taiwan"},
+        { "traditional": "我叫", "pinyin": "Wǒ jiào", "bopomofo": "ㄨㄛˇ ㄐㄧㄠˋ", "english": "My name is", "description": "Used to introduce oneself" }
+      ],
+
+      "2": [
+      { "traditional": "機場", "pinyin": "Jī chǎng", "bopomofo": "ㄐㄧ ㄔㄤˇ", "english": "Airport" },
+      { "traditional": "登機", "pinyin": "Dēng jī", "bopomofo": "ㄉㄥ ㄐㄧ", "english": "Boarding" },
+      { "traditional": "護照", "pinyin": "Hù zhào", "bopomofo": "ㄏㄨˋ ㄓㄠˋ", "english": "Passport" },
+      { "traditional": "行李", "pinyin": "Xíng lǐ", "bopomofo": "ㄒㄧㄥˊ ㄌㄧˇ", "english": "Luggage" },
+      { "traditional": "登機牌", "pinyin": "Dēng jī pái", "bopomofo": "ㄉㄥ ㄐㄧ ㄆㄞˊ", "english": "Boarding Pass" },
+      { "traditional": "航班", "pinyin": "Háng bān", "bopomofo": "ㄏㄤˊ ㄅㄢ", "english": "Flight" },
+      { "traditional": "起飛", "pinyin": "Qǐ fēi", "bopomofo": "ㄑㄧˇ ㄈㄟ", "english": "Take Off" },
+      { "traditional": "降落", "pinyin": "Jiàng luò", "bopomofo": "ㄐㄧㄤˋ ㄌㄨㄛˋ", "english": "Landing" },
+      { "traditional": "候機室", "pinyin": "Hòu jī shì", "bopomofo": "ㄏㄡˋ ㄐㄧ ㄕˋ", "english": "Waiting Area" },
+      { "traditional": "安全檢查", "pinyin": "Ān quán jiǎn chá", "bopomofo": "ㄢ ㄑㄩㄢˊ ㄐㄧㄢˇ ㄔㄚˊ", "english": "Security Check" }
+      ],
+
+      "3": [
+      { "traditional": "攤位", "pinyin": "Tān wèi", "bopomofo": "ㄊㄢ ㄨㄟˋ", "english": "Stall" },
+      { "traditional": "小吃", "pinyin": "Xiǎo chī", "bopomofo": "ㄒㄧㄠˇ ㄔ", "english": "Snacks" },
+      { "traditional": "燒烤", "pinyin": "Shāo kǎo", "bopomofo": "ㄕㄠ ㄎㄠˇ", "english": "Barbecue" },
+      { "traditional": "玉米", "pinyin": "Yù mǐ", "bopomofo": "ㄩˋ ㄇㄧˇ", "english": "Corn" },
+      { "traditional": "冰品", "pinyin": "Bīng pǐn", "bopomofo": "ㄅㄧㄥ ㄆㄧㄣˇ", "english": "Ice Desserts" },
+      { "traditional": "飲品", "pinyin": "Yǐn pǐn", "bopomofo": "ㄧㄣˇ ㄆㄧㄣˇ", "english": "Beverages" },
+      { "traditional": "台灣啤酒", "pinyin": "Tái wān pí jiǔ", "bopomofo": "ㄊㄞˊ ㄨㄢ ㄆㄧˊ ㄐㄧㄡˇ", "english": "Taiwan Beer" },
+      { "traditional": "爆米花", "pinyin": "Bào mǐ huā", "bopomofo": "ㄅㄠˋ ㄇㄧˇ ㄏㄨㄚ", "english": "Popcorn" },
+      { "traditional": "現做", "pinyin": "Xiàn zuò", "bopomofo": "ㄒㄧㄢˋ ㄗㄨㄛˋ", "english": "Made to Order" },
+      { "traditional": "夜市", "pinyin": "Yè shì", "bopomofo": "ㄧㄝˋ ㄕˋ", "english": "Night Market" }
+      ],
+
+      "4": [
+  { "traditional": "饼干", "pinyin": "Bǐng gān", "bopomofo": "ㄅㄧㄥˇ ㄍㄢ", "english": "Biscuits" },
+  { "traditional": "奶茶", "pinyin": "Nǎi chá", "bopomofo": "ㄋㄞˇ ㄔㄚˊ", "english": "Milk Tea" },
+  { "traditional": "支付宝", "pinyin": "Zhī fù bǎo", "bopomofo": "ㄓ ㄈㄨˋ ㄅㄠˇ", "english": "Alipay" },
+  { "traditional": "微信支付", "pinyin": "Wēi xìn zhī fù", "bopomofo": "ㄨㄟ ㄒㄧㄣˋ ㄓ ㄈㄨˋ", "english": "WeChat Pay" },
+  { "traditional": "多少錢", "pinyin": "Duōshǎo qián", "bopomofo": "ㄉㄨㄛ ㄕㄠˇ ㄑㄧㄢˊ", "english": "How much?" },  
+  { "traditional": "可以便宜一點嗎", "pinyin": "Kěyǐ piányi yīdiǎn ma", "bopomofo": "ㄎㄜˇ ㄧˇ ㄆㄧㄢˊ ㄧ ㄉㄧㄢˇ ㄇㄚ", "english": "Can it be cheaper?" }
+],
+
+"5":[
+    { "traditional": "干冰", "pinyin": "gān bīng", "bopomofo": "ㄍㄢ ㄅㄧㄥ", "english": "Crispy Fried Chicken" },
+    { "traditional": "狼烟", "pinyin": "láng yán", "bopomofo": "ㄌㄤˊ ㄧㄢ", "english": "Beef Stew" },
+    { "traditional": "汤", "pinyin": "tāng", "bopomofo": "ㄊㄤ", "english": "Soup" },
+    { "traditional": "宫保汤", "pinyin": "gōng bāo tāng", "bopomofo": "ㄍㄨㄥ ㄅㄠˇ ㄊㄤ", "english": "Kung Pao Soup" },
+    { "traditional": "龙珠", "pinyin": "lóng zhū", "bopomofo": "ㄌㄨㄥˊ ㄓㄨ", "english": "Herbal Tea" },
+    { "traditional": "水玉", "pinyin": "shuǐ yù", "bopomofo": "ㄕㄨㄟˇ ㄩˋ", "english": "Herbal Tea" }
+]
+
+    }
+  }
+  
