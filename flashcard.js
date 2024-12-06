@@ -1,31 +1,64 @@
-// Function to handle level button clicks
 function handleLevelClick(levelId) {
-    const button = document.getElementById(`level${levelId}Button`);
+    const button = document.querySelector(`#level${levelId}Button`);
     if (button.classList.contains('level-active')) {
-        showFlashcardSection(levelId); // Pass levelId
+        showFlashcardSection(levelId);
+        
+        button.classList.remove('level-active');
+        button.classList.add('level-completed');
+        
+        const nextButton = document.querySelector(`#level${levelId + 1}Button`);
+        if (nextButton) {
+            nextButton.classList.remove('level-locked');
+            nextButton.classList.add('level-active');
+        }
     } else if (button.classList.contains('level-locked')) {
         alert(`Level ${levelId} is not available yet! Complete the previous level first.`);
     }
 }
 
 function showFlashcardSection(levelId) {
-    document.getElementById("level-buttons").style.display = "none";
-    const flashcardSection = document.getElementById("flashcard-section");
-    flashcardSection.style.display = "block";
-    initializeFlashcards(levelId); // Pass the selected level
+    document.getElementById('levelSelector').style.display = 'none';
+    document.getElementById('flashcard-section').style.display = 'block';
+    initializeFlashcards(levelId);
 }
 
-// Function to initialize levels
+// Function to initialize levels and unlock completed ones
 function initializeLevels() {
     const completedLevels = JSON.parse(localStorage.getItem('completedLevels')) || [1];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 6; i++) { // Updated to include all 6 buttons
         const button = document.getElementById(`level${i}Button`);
-        if (completedLevels.includes(i)) {
+        if (button && completedLevels.includes(i)) {
             button.classList.remove('level-locked');
             button.classList.add('level-active');
         }
     }
 }
+
+// Function to update completed levels
+function completeLevel(levelId) {
+    const completedLevels = JSON.parse(localStorage.getItem('completedLevels')) || [1];
+    if (!completedLevels.includes(levelId)) {
+        completedLevels.push(levelId + 1);
+        localStorage.setItem('completedLevels', JSON.stringify(completedLevels));
+        
+        // Update UI for completed level
+        const currentButton = document.getElementById(`level${levelId}Button`);
+        const nextButton = document.getElementById(`level${levelId + 1}Button`);
+        
+        if (currentButton) {
+            currentButton.classList.remove('level-active');
+            currentButton.classList.add('level-completed');
+        }
+        
+        if (nextButton) {
+            nextButton.classList.remove('level-locked');
+            nextButton.classList.add('level-active');
+        }
+        
+        alert(`Level ${levelId} completed! Level ${levelId + 1} is now unlocked.`);
+    }
+}
+
 
 
 class FlashcardPronunciationChecker {
@@ -206,12 +239,12 @@ function createFlashcard(card) {
     return flashcard;
 }
 
-// Function to dynamically load flashcards for a level
+// Function to load flashcards dynamically
 async function loadFlashcards(level) {
     try {
-        const response = await fetch('flashcard.json'); // Fetch flashcard data
+        const response = await fetch('flashcard.json');
         const data = await response.json();
-        return data.levels[level] || []; // Return flashcards for the specific level
+        return data.levels[level] || [];
     } catch (error) {
         console.error("Error loading flashcards:", error);
         alert("Failed to load flashcards. Please try again later.");
@@ -222,23 +255,19 @@ async function loadFlashcards(level) {
 // Function to initialize and display flashcards dynamically
 async function initializeFlashcards(level) {
     const flashcardContainer = document.getElementById("flashcardContainer");
-    flashcardContainer.innerHTML = '<p>Loading flashcards...</p>'; // Show loading message
+    flashcardContainer.innerHTML = '<p>Loading flashcards...</p>';
 
-    const loadedFlashcards = await loadFlashcards(level); // Fetch flashcards for the level
-    flashcardContainer.innerHTML = ''; // Clear loading message
-
-    if (loadedFlashcards.length === 0) {
+    const loadedCards = await loadFlashcards(level);
+    if (loadedCards.length === 0) {
         flashcardContainer.innerHTML = '<p>No flashcards found for this level.</p>';
         return;
     }
 
-    loadedFlashcards.forEach((card) => {
-        flashcardContainer.appendChild(createFlashcard(card));
-    });
-
-    currentPage = 0; // Reset pagination
-    displayCurrentPage(); // Paginate the cards
+    flashcards = loadedCards; // Store loaded cards in global array
+    currentPage = 0;
+    displayCurrentPage();
 }
+
 
 // Record Functions
 async function handlePronunciationCheck(event, card) {
@@ -303,17 +332,19 @@ function displayCurrentPage() {
     const endIndex = Math.min(startIndex + cardsPerPage, flashcards.length);
 
     for (let i = startIndex; i < endIndex; i++) {
-        container.appendChild(createFlashcard(flashcards[i])); // Flashcards now created dynamically.
+        container.appendChild(createFlashcard(flashcards[i]));
     }
     updateNavigationState();
 }
 
 function updateNavigationState() {
-    const prevButton = document.querySelector('button[onclick="showPreviousCards()"]');
-    const nextButton = document.querySelector('button[onclick="showNextCards()"]');
-
-    prevButton.disabled = currentPage === 0;
-    nextButton.disabled = (currentPage + 1) * cardsPerPage >= flashcards.length;
+    const prevButton = document.querySelector('.nav-button:first-child');
+    const nextButton = document.querySelector('.nav-button:last-child');
+    
+    if (prevButton && nextButton) {
+        prevButton.disabled = currentPage === 0;
+        nextButton.disabled = (currentPage + 1) * cardsPerPage >= flashcards.length;
+    }
 }
 
 function showNextCards() {
@@ -330,38 +361,20 @@ function showPreviousCards() {
     }
 }
 
-// UPDATED: Use dynamic data loading and pronunciation checking
-window.onload = function () {
+window.onload = function() {
     window.speechSynthesis.getVoices();
     if ('speechSynthesis' in window) {
         if (window.speechSynthesis.onvoiceschanged !== undefined) {
-            window.speechSynthesis.onvoiceschanged = () => {};
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
         }
-        initializeLevels(); 
+        initializeLevels();
     } else {
         alert("Sorry, your browser doesn't support text to speech! Please try using a modern browser like Chrome or Firefox.");
     }
 };
 
-// Function to load flashcards dynamically based on selected level
-async function loadFlashcards() {
-    const level = getLevelFromURL(); // Get level from query parameters
-    try {
-        const response = await fetch('flashcard.json'); // Fetch JSON data
-        const data = await response.json();
-        const flashcardsForLevel = data.levels[level]; // Filter flashcards by level.
-
-        if (!flashcardsForLevel) {
-            alert("No flashcards found for this level.");
-            return [];
-        }
-        return flashcardsForLevel;
-    } catch (error) {
-        console.error("Error loading flashcards:", error);
-        alert("Failed to load flashcards. Please try again later.");
-        return [];
-    }
-}
 
 // Extract level from URL query parameters
 function getLevelFromURL() {
@@ -369,21 +382,8 @@ function getLevelFromURL() {
     return params.get('level') || "1"; // Default to level 1 if no level is provided.
 }
 
-// UPDATED: Initialize flashcards with dynamic data
-async function initializeFlashcards() {
-    const flashcardContainer = document.getElementById("flashcardContainer");
-    flashcardContainer.innerHTML = '<p>Loading flashcards...</p>'; // Show loading message.
-
-    const loadedFlashcards = await loadFlashcards(); // Fetch flashcards for the level.
-    if (loadedFlashcards.length === 0) return; // Exit if no flashcards available.
-
-    flashcards.splice(0, flashcards.length, ...loadedFlashcards); // Replace global flashcards array.
-    currentPage = 0;
-    displayCurrentPage(); // Render the flashcards dynamically.
-}
-
 // Global Variables
-const flashcards = [];
+let flashcards = [];
 const pronunciationChecker = new FlashcardPronunciationChecker(); // Instantiate the pronunciation checker.
 let currentPage = 0;
 const cardsPerPage = 4; // Number of flashcards per page.
