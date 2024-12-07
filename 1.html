@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình chiếu ảnh và văn bản</title>
+    <link rel="stylesheet" href="1.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <audio id="audio" controls autoplay>
+                <source src="audio/page3_audio_1.mp3" type="audio/mpeg">
+            </audio>
+            <img id="image" src="photos/1-1.png" alt="Ảnh hiện tại">
+            <p id="text">You and Alex are meeting for the first time at a language exchange event</p>
+            <div class="buttons">
+                <button onclick = "location.href='page2.php'">Quit</button>
+                <button onclick="next()">Next</button>
+            </div>
+        </div>
+    </div>
+    <script src="1.js"></script>
+</body>
+</html>
