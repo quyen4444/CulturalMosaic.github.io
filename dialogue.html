@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Taiwan: Language Adventure</title>
+    <link rel="stylesheet" href="level1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="level-selector" id="levelSelector">
+        <div class="level-button level-active" id="level1Button" onclick="handleLevelClick(1)">
+            <span>Get Started</span>
+        </div>
+        <div class="level-button level-locked" id="level2Button" onclick="handleLevelClick(2)">
+            <span>1</span>
+        </div>
+        <div class="level-button level-locked" id="level3Button" onclick="handleLevelClick(3)">
+            <span>2</span>
+        </div>
+        <div class="level-button level-locked" id="level4Button" onclick="handleLevelClick(4)">
+            <span>3</span>
+        </div>
+        <div class="level-button level-locked" id="level5Button" onclick="handleLevelClick(5)">
+            <span>4</span>
+        </div>
+        <div class="level-button level-locked" id="level6Button" onclick="handleLevelClick(6)">
+            <span>5</span>
+        </div>
+        <button class="return-button" onclick="redirectToIndex()">Home</button>
+    </div>
+    
+    </div>
+    
+    <!-- Dialogue Game Section -->
+    <section id="dialogue-game-section">
+        <div class="game-container">
+            <div class="scene-background">
+                <img id="sceneImage" alt="Game Scene">
+            </div>
+            <div class="dialogue-container">
+                <div class="dialogue-box">
+                    <div class="speaker-name">Mei Lin</div>
+                    <div class="dialogue-text" id="dialogueText"></div>
+                    <div class="context-text" id="contextText"></div>
+                    <div class="question-text" id="questionText"></div>
+                </div>
+            </div>
+            <div class="choices-container" id="choicesContainer"></div>
+            <div class="feedback-message" id="feedbackMessage"></div>
+            <div class="game-controls">
+                <button class="return-button" onclick="returnToLevels()">Back to Levels</button>
+                <button class="continue-button hidden" id="continueButton">Continue</button>
+            </div>
+        </div>
+    </section>
+    <script src="dialogue.js"></script>
+</body>
+</html>
