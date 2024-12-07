@@ -64,17 +64,13 @@ body {
   }
 
 .return-button {
-    display: block;
-    margin: 20px auto;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 1rem;
     background-color: #f39c12;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    position: absolute;
-    bottom: -3rem;
 }
 
 .return-button:hover {
@@ -251,6 +247,10 @@ body {
 
 
 /* Main game container DIALOGUE STARTS HERE */
+#dialogue-game-section {
+    display: none;
+  }
+
 .game-container {
     position: relative;
     width: 100%;
@@ -333,6 +333,18 @@ body {
     color: #333; /* Optional: Use a darker color for questions */
 }
 
+.playable-text {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.playable-text:hover {
+    color: #4a90e2;
+    text-decoration: underline;
+    transform: scale(1.1);
+}
+
+
 .audio-button {
     position: absolute;
     top: 10px;
@@ -359,7 +371,6 @@ body {
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    visibility: hidden; /* Initially hidden */
     display: none; /* Initially hidden */
     z-index: 10;
     width: 40%; /* Adjust size as needed */
@@ -410,19 +421,20 @@ body {
 
 /* Navigation Controls */
 .game-controls {
+    display: flex;
+    justify-content: space-between; /* Positions buttons at opposite ends */
+    align-items: center; /* Aligns buttons vertically */
     padding: 20px;
-    text-align: right;
 }
 
 .continue-button {
     padding: 10px 20px;
     font-size: 1rem;
-    background: #4a90e2;
+    background-color: #4a90e2;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
 }
 
 .continue-button:hover {
@@ -468,4 +480,5 @@ body {
         font-size: 0.9rem;
     }
 }
+
 
