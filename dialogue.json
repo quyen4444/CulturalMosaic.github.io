@@ -3,83 +3,83 @@
       "1": [
         {
           "scene": "language-exchange-meetup.jpg",
-          "npcText": "你好 (Nǐ hǎo)! 我叫 (Wǒ jiào) Alex.",
+          "npcText": "你好! 我叫 Alex.",
           "context": "*Alex greets you at the language exchange event.*",
           "question": "How would you introduce yourself in Mandarin?",
           "choices": [
-            { "id": "A", "text": "我叫 (Wǒ jiào) [your name]", "correct": true },
-            { "id": "B", "text": "你好 (Nǐ hǎo) [your name]", "correct": false },
-            { "id": "C", "text": "謝謝 (Xiè xiè) [your name]", "correct": false }
+            { "id": "A", "text": "我叫 [your name]", "correct": true },
+            { "id": "B", "text": "你好 [your name]", "correct": false },
+            { "id": "C", "text": "謝謝 [your name]", "correct": false }
           ],
           "feedback": {
             "correct": "Correct! This is how you properly introduce yourself in Mandarin.",
-            "incorrect": "To introduce yourself, use '我叫' (Wǒ jiào) followed by your name."
+            "incorrect": "To introduce yourself, use '我叫' followed by your name."
           }
         },
         {
-          "npcText": "Let's practice numbers! 一 (Yī), 二 (Èr), 三 (Sān)...",
+          "npcText": "Let's practice numbers! 一, 二, 三...",
           "context": "*Alex is teaching you to count in Mandarin.*",
           "question": "What is the correct sequence for numbers 4, 5, and 6?",
           "choices": [
-            { "id": "A", "text": "四 (Sì), 五 (Wǔ), 六 (Liù)", "correct": true },
-            { "id": "B", "text": "四 (Sì), 六 (Liù), 五 (Wǔ)", "correct": false },
-            { "id": "C", "text": "五 (Wǔ), 四 (Sì), 六 (Liù)", "correct": false }
+            { "id": "A", "text": "四, 五, 六", "correct": true },
+            { "id": "B", "text": "四, 六, 五", "correct": false },
+            { "id": "C", "text": "五, 四, 六", "correct": false }
           ],
           "feedback": {
             "correct": "Excellent! You're counting correctly in Mandarin.",
-            "incorrect": "The correct sequence is 四 (Sì), 五 (Wǔ), 六 (Liù) for 4, 5, and 6."
+            "incorrect": "The correct sequence is 四, 五, 六 for 4, 5, and 6."
           }
         },
         {
-          "npcText": "For 'yes,' you say 是 (Shì). For 'no,' you say 不是 (Bù shì).",
+          "npcText": "For 'yes,' you say 是. For 'no,' you say 不是.",
           "question": "How do you say 'no' in Mandarin?",
           "choices": [
-            { "id": "A", "text": "不是 (Bù shì)", "correct": true },
-            { "id": "B", "text": "是 (Shì)", "correct": false },
-            { "id": "C", "text": "謝謝 (Xiè xiè)", "correct": false }
+            { "id": "A", "text": "不是", "correct": true },
+            { "id": "B", "text": "是", "correct": false },
+            { "id": "C", "text": "謝謝", "correct": false }
           ],
           "feedback": {
-            "correct": "Correct! 不是 (Bù shì) is how you say 'no'.",
-            "incorrect": "不是 (Bù shì) means 'no'. Remember that 不 (bù) often makes things negative."
+            "correct": "Correct! 不是 is how you say 'no'.",
+            "incorrect": "不是 means 'no'. Remember that 不 often makes things negative."
           }
         },
         {
-          "npcText": "When someone says 謝謝 (Xiè xiè), you can respond with 不客氣 (Bù kè qì) or 不會 (Bù huì).",
+          "npcText": "When someone says 謝謝, you can respond with 不客氣 or 不會.",
           "question": "What are the two ways to say 'you're welcome' in Taiwan?",
           "choices": [
-            { "id": "A", "text": "不客氣 (Bù kè qì) or 不會 (Bù huì)", "correct": true },
-            { "id": "B", "text": "謝謝 (Xiè xiè) or 你好 (Nǐ hǎo)", "correct": false },
-            { "id": "C", "text": "是 (Shì) or 不是 (Bù shì)", "correct": false }
+            { "id": "A", "text": "不客氣 or 不會", "correct": true },
+            { "id": "B", "text": "謝謝 or 你好", "correct": false },
+            { "id": "C", "text": "是 or 不是", "correct": false }
           ],
           "feedback": {
             "correct": "Great! Both responses are commonly used in Taiwan.",
-            "incorrect": "In Taiwan, you can say either 不客氣 (Bù kè qì) or 不會 (Bù huì) to say 'you're welcome'."
+            "incorrect": "In Taiwan, you can say either 不客氣 or 不會 to say 'you're welcome'."
           }
         },
         {
-          "npcText": "If you need to apologize, say 對不起 (Duì bù qǐ).",
+          "npcText": "If you need to apologize, say 對不起.",
           "question": "How do you respond when someone apologizes to you?",
           "choices": [
-            { "id": "A", "text": "沒關係 (Méi guān xì)", "correct": true },
-            { "id": "B", "text": "對不起 (Duì bù qǐ)", "correct": false },
-            { "id": "C", "text": "你好 (Nǐ hǎo)", "correct": false }
+            { "id": "A", "text": "沒關係", "correct": true },
+            { "id": "B", "text": "對不起", "correct": false },
+            { "id": "C", "text": "你好", "correct": false }
           ],
           "feedback": {
-            "correct": "Perfect! 沒關係 (Méi guān xì) is a polite way to say 'it's okay' after an apology.",
-            "incorrect": "When someone apologizes, you should say 沒關係 (Méi guān xì) to mean 'it's okay'."
+            "correct": "Perfect! 沒關係 is a polite way to say 'it's okay' after an apology.",
+            "incorrect": "When someone apologizes, you should say 沒關係 to mean 'it's okay'."
           }
         },
         {
           "npcText": "Now let's practice bigger numbers!",
           "question": "How do you say the number 10 in Mandarin?",
           "choices": [
-            { "id": "A", "text": "十 (Shí)", "correct": true },
-            { "id": "B", "text": "七 (Qī)", "correct": false },
-            { "id": "C", "text": "八 (Bā)", "correct": false }
+            { "id": "A", "text": "十", "correct": true },
+            { "id": "B", "text": "七", "correct": false },
+            { "id": "C", "text": "八", "correct": false }
           ],
           "feedback": {
-            "correct": "Excellent! 十 (Shí) is the number 10.",
-            "incorrect": "十 (Shí) means 10. This is an important number to remember as it's used to build larger numbers."
+            "correct": "Excellent! 十 is the number 10.",
+            "incorrect": "十 means 10. This is an important number to remember as it's used to build larger numbers."
           }
         },
         {
@@ -91,23 +91,23 @@
      "2": [
       {
         "scene": "airport-terminal.jpg",
-        "npcText": "Hi Ben! Have you checked your 護照 (hù zhào) and 登機牌 (dēng jī pái)?",
+        "npcText": "Hi Ben! Have you checked your 護照 and 登機牌?",
         "context": "*Amy is helping you prepare for your flight at Songshan Airport.*",
         "question": "What are the two essential documents Amy is asking about?",
         "choices": [
-          { "id": "A", "text": "Passport (護照) and boarding pass (登機牌)", "correct": true },
-          { "id": "B", "text": "Ticket (票) and passport (護照)", "correct": false },
-          { "id": "C", "text": "ID card (身份證) and boarding pass (登機牌)", "correct": false }
+          { "id": "A", "text": "Passport and boarding pass", "correct": true },
+          { "id": "B", "text": "Ticket and passport", "correct": false },
+          { "id": "C", "text": "ID card and boarding pass", "correct": false }
         ],
         "feedback": {
           "correct": "Correct! These are the essential documents for boarding a flight.",
-          "incorrect": "You need both your 護照 (passport) and 登機牌 (boarding pass) to board the flight."
+          "incorrect": "You need both your 護照 and 登機牌 to board the flight."
         }
       },
       {
         "scene": "airport-security.jpg",
-        "npcText": "Don't forget to go through 安全檢查 (ān quán jiǎn chá) before heading to the 候機室 (hòu jī shì).",
-        "question": "What is 安全檢查 (ān quán jiǎn chá)?",
+        "npcText": "Don't forget to go through 安全檢查 before heading to the 候機室.",
+        "question": "What is 安全檢查?",
         "choices": [
           { "id": "A", "text": "Security check", "correct": true },
           { "id": "B", "text": "Baggage claim", "correct": false },
@@ -120,23 +120,23 @@
       },
       {
         "scene": "airport-departure.jpg",
-        "npcText": "Your 航班 (háng bān) will 起飛 (qǐ fēi) soon. Time for 登機 (dēng jī)!",
-        "question": "What does 起飛 (qǐ fēi) mean?",
+        "npcText": "Your 航班 will 起飛 soon. Time for 登機!",
+        "question": "What does 起飛 mean?",
         "choices": [
           { "id": "A", "text": "Take off", "correct": true },
           { "id": "B", "text": "Land", "correct": false },
           { "id": "C", "text": "Board", "correct": false }
         ],
         "feedback": {
-          "correct": "Correct! 起飛 means take off, while 降落 (jiàng luò) means landing.",
-          "incorrect": "起飛 (qǐ fēi) means take off - when the plane leaves the ground."
+          "correct": "Correct! 起飛 means take off, while 降落 means landing.",
+          "incorrect": "起飛 means take off - when the plane leaves the ground."
         }
       }
     ],
     "3": [
       {
         "scene": "night-market.jpg",
-        "npcText": "Welcome to our 攤位 (tān wèi)! We have many 小吃 (xiǎo chī). Would you like to try our 特價 (tè jià) items?",
+        "npcText": "Welcome to our 攤位! We have many 小吃. Would you like to try our 特價 items?",
         "context": "*At a busy night market stall.*",
         "question": "What does 特價 (tè jià) mean?",
         "choices": [
@@ -151,7 +151,7 @@
       },
       {
         "scene": "food-stall.jpg",
-        "npcText": "這個多少錢 (zhè ge duō shao qián)? 有沒有打折 (yǒu méi yǒu dǎ zhé)?",
+        "npcText": "這個多少錢? 有沒有打折?",
         "question": "What are you asking about with these phrases?",
         "choices": [
           { "id": "A", "text": "The price and if there's a discount", "correct": true },
@@ -167,7 +167,7 @@
     "4": [
       {
         "scene": "convenience-store.jpg",
-        "npcText": "您好！We accept 現金 (xiàn jīn), 信用卡 (xìn yòng kǎ), and mobile payment like 行動支付 (xíng dòng zhī fù).",
+        "npcText": "您好！We accept 現金, 信用卡, and mobile payment like 行動支付.",
         "question": "What does 信用卡 (xìn yòng kǎ) mean?",
         "choices": [
           { "id": "A", "text": "Credit card", "correct": true },
@@ -181,7 +181,7 @@
       },
       {
         "scene": "store-checkout.jpg",
-        "npcText": "請問要刷卡還是付現金 (qǐng wèn yào shuā kǎ hái shì fù xiàn jīn)?",
+        "npcText": "請問要刷卡還是付現金?",
         "question": "What is the cashier asking?",
         "choices": [
           { "id": "A", "text": "Would you like to pay by card or cash?", "correct": true },
