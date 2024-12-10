@@ -1,3 +1,8 @@
+function returnToLevels() {
+    document.getElementById('flashcard-section').style.display = 'none';
+    document.getElementById('levelSelector').style.display = 'block';
+}
+
 function handleLevelClick(levelId) {
     const button = document.querySelector(`#level${levelId}Button`);
     if (button.classList.contains('level-active')) {
@@ -22,10 +27,9 @@ function showFlashcardSection(levelId) {
     initializeFlashcards(levelId);
 }
 
-// Function to initialize levels and unlock completed ones
 function initializeLevels() {
     const completedLevels = JSON.parse(localStorage.getItem('completedLevels')) || [1];
-    for (let i = 1; i <= 6; i++) { // Updated to include all 6 buttons
+    for (let i = 1; i <= 6; i++) {
         const button = document.getElementById(`level${i}Button`);
         if (button && completedLevels.includes(i)) {
             button.classList.remove('level-locked');
@@ -34,14 +38,12 @@ function initializeLevels() {
     }
 }
 
-// Function to update completed levels
 function completeLevel(levelId) {
     const completedLevels = JSON.parse(localStorage.getItem('completedLevels')) || [1];
     if (!completedLevels.includes(levelId)) {
         completedLevels.push(levelId + 1);
         localStorage.setItem('completedLevels', JSON.stringify(completedLevels));
         
-        // Update UI for completed level
         const currentButton = document.getElementById(`level${levelId}Button`);
         const nextButton = document.getElementById(`level${levelId + 1}Button`);
         
@@ -59,7 +61,7 @@ function completeLevel(levelId) {
     }
 }
 
-
+document.addEventListener('DOMContentLoaded', initializeLevels);
 
 class FlashcardPronunciationChecker {
     constructor() {
