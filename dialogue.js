@@ -2,6 +2,11 @@ function redirectToIndex() {
     window.location.href = 'index.html';
 }
 
+function returnToLevels() {
+    document.getElementById('dialogue-game-section').style.display = 'none';
+    document.getElementById('levelSelector').style.display = 'block';
+}
+
 function handleLevelClick(levelId) {
     const button = document.querySelector(`#level${levelId}Button`);
     if (button.classList.contains('level-active')) {
