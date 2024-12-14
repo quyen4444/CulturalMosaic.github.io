@@ -1,6 +1,15 @@
+:root {
+    --primary-blue: #bee3eb;      /* Background sea blue */
+    --accent-orange: #FFB845;     /* Buildings/warm accents */
+    --light-yellow: #FFF8E7;      /* Background paper color */
+    --mint-green: #8AE0BB;        /* Trees/success states */
+    --dark-text: #2C3E50;         /* Text color */
+    --error-red: #E74C3C;         /* Error states */
+}
+
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #d0bdf5;
+    font-family: 'Noto Sans', system-ui, -apple-system, sans-serif; /* More modern font stack */
+    background-color: var(--primary-blue);
     margin: 0;
     min-height: 100vh;
     display: flex;
@@ -13,14 +22,16 @@ body {
     display: grid;
     grid-template-rows: 1fr auto;
     justify-items: center;
-    gap: 6rem; /* Increased from 2rem */
-    padding: 2rem 2rem 4rem; /* Added bottom padding */
+    gap: 6rem;
+    padding: 6rem 6rem 6rem;
+    background-color: var(--light-yellow);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     
 }
 
 .level-grid {
-    margin-top: 15vh; /* Push content down from top */
-    margin-bottom: 15vh; /* Push content down from top */
+    margin: 15vh 0;
     display: flex;
     gap: 5rem;
     justify-content: center;
@@ -30,8 +41,8 @@ body {
 }
 
 .level-button {
-    width: 4.5rem;
-    height: 4.5rem;
+    width: 4.8rem;
+    height: 4.8rem;
     transform: rotate(45deg);
     display: flex;
     align-items: center;
@@ -42,50 +53,35 @@ body {
 
 .level-button span {
     transform: rotate(-45deg);
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
-    color: #4A2B4D;
+    color: var(--dark-text);
     width: 100%;
     text-align: center;
     user-select: none;
 }
 
 .level-button:first-child {
-    background-color: #E99C4D;
+    background-color: var(--mint-green);
     border: none;
 }
 
 .level-active {
     background-color: white;
-    border: 2px solid #E99C4D;
+    border: 2px solid var(--accent-orange);
 }
 
 .level-completed {
-    background-color: #E99C4D;
+    background-color: var(--mint-green);
 }
 
 .level-locked {
-    background-color: #4A2B4D;
+    background-color: #000000;
     cursor: not-allowed;
 }
 
 .level-locked span {
     color: rgba(255, 255, 255, 0.5);
-}
-
-.return-button {
-    padding: 15px 25px;
-    font-size: 1rem;
-    background-color: #E99C4D;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 2rem;
-}
-
-.return-button:hover {
-    background-color: #d88c3d;
 }
 
 /* Media query for horizontal layout */
@@ -97,6 +93,25 @@ body {
     }
 }
 
+@keyframes blink {
+    from, to { border-color: transparent }
+    50% { border-color: black; }
+}
+
+.nav-button {
+    background-color: #000000; /* Bright blue */
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.skip-button {background-color: #34495E; color: white; }
+.nav-button:hover:not(:disabled), .skip-button:hover { opacity: 0.8; }
+.nav-button:disabled { background-color: #cccccc; cursor: not-allowed; }
+
+.nav-button:hover:not(:disabled),
+.skip-button:hover {
+    opacity: 0.8;
+}
+
 #flashcard-section, #dialogue-game-section {
     width: 100%;
     max-width: 1200px;
@@ -106,13 +121,13 @@ body {
 
 .flashcard-container {
     display: flex;
-    gap: 40px;
+    gap: 50px;
     margin-bottom: 40px;
     justify-content: center;
 }
 
 .thecard {
-    width: 250px;
+    width: 260px;
     height: 380px;
     position: relative;
     transform-style: preserve-3d;
@@ -127,8 +142,8 @@ body {
 
 .thecard h2 {
     font-size: 2.5em;
-    
     margin-bottom: 15px;
+    font-weight: 700;
 }
 .sound-button {
     background: transparent;
@@ -160,12 +175,13 @@ body {
 }
 
 .thefront {
-    background-color: #f1c728;
-    color: #333;
+    background-color:   var(--accent-orange);
+    color: #2C3E50;
 }
 
 .theback {
     background-color: #ffffff;
+    color: #2C3E50;
     transform: rotateY(180deg);
 }
 
@@ -187,14 +203,10 @@ body {
     padding: 10px 30px;
     border: none;
     border-radius: 5px;
-    color: white;
+    color: var(--mint-green);
     cursor: pointer;
     font-size: 16px;
     transition: opacity 0.3s;
-}
-
-.nav-button {
-    background-color: #7b0404;
 }
 
 .skip-button {
@@ -212,7 +224,7 @@ body {
   
 .button-group {
         display: flex;
-        gap: 10px;
+        gap: 30px;
         justify-content: center;
         margin-top: 10px;
     }
@@ -221,19 +233,19 @@ body {
         padding: 8px;
         border: none;
         border-radius: 50%;
-        background: #f0f0f0;
+        color: black;
+        background: #ffffff;
         cursor: pointer;
         width: 36px;
         height: 36px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
     .record-button.recording {
         background: #ff4444;
-        color: white;
         animation: pulse 1s infinite;
     }
 
@@ -272,13 +284,15 @@ body {
   }
 
 .game-container {
+    background-color: var(--light-yellow);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     position: relative;
+    margin: 2rem auto;
     width: 100%;
     height: 100vh; /* Occupy the full viewport height */
-    background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
     display: flex;
     flex-direction: column; /* Ensures content stacks properly */
     justify-content: space-between; /* Aligns elements within the container */
@@ -313,7 +327,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.9);
+    background-color: var(--light-yellow);
     padding: 20px;
     width: 100%;
     height: 30%; /* Allocate 30% of the screen for dialogue */
@@ -321,24 +335,28 @@ body {
 }
 
 .dialogue-box {
-    width: 80%;
-    background: #f5f5f5;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
+    background-color: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
+    width: 95%; /* Adjust width to match feedback box */
+    max-width: 1000px; /* Add a max-width for responsiveness */
 }
 
 .speaker-name {
-    font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
+    color: var(--accent-orange);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
 .dialogue-text {
-    line-height: 1.5;
-    font-size: 1rem;
-    margin-bottom: 10px;
+    color: var(--dark-text);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
 }
 
 .context-text {
@@ -364,23 +382,6 @@ body {
     transform: scale(1.1);
 }
 
-
-.audio-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-}
-
-.audio-button:hover {
-    background: #e0e0e0;
-    border-radius: 50%;
-}
-
- 
 /* Multiple Choice Section */
 .choices-container {
     position: absolute;
@@ -398,107 +399,112 @@ body {
 }
 
 .choice-button {
+    background-color: var(--accent-orange);
+    color: var(--dark-text);
     display: block;
     width: 95%;
-    margin: 10px auto;
-    padding: 15px;
-    font-size: 1rem;
-    background: #4a90e2;
-    color: white;
+    padding: 16px 24px;
+    font-size: 1.1rem;
+    font-weight: 500;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    margin-bottom: 5px; /* Add spacing between buttons */
 }
 
-.choice-button:hover { background: #357abd; }
-.choice-button.correct { background: #4caf50; }
-.choice-button.incorrect { background: #f44336; }
-
-
-.feedback-message {
-    padding: 15px;
-    margin: 10px 20px;
-    border-radius: 5px;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+.choice-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 184, 69, 0.3);
 }
 
-.feedback-message.correct {   
-    color: #2e7d32;
+.choice-button.correct {
+    background-color: var(--mint-green);
 }
 
-.feedback-message.incorrect {
-    color: #c62828;
+.choice-button.incorrect {
+    background-color: var(--error-red);
+    color: white;
 }
-
-.feedback-message.correct, .feedback-message.incorrect {
-    opacity: 1;
-    background: #e8f5e9;
-    display: block;
-}
-
-/* Navigation Controls */
 .game-controls {
     display: flex;
-    justify-content: space-between; /* Positions buttons at opposite ends */
-    align-items: center; /* Aligns buttons vertically */
-    padding: 20px;
+    justify-content: space-between; /* Space between return and continue buttons */
+    align-items: center;
+    margin-top: 20px;
+    padding: 1rem 2rem; /* Add padding to create space from the outer border */
+    box-sizing: border-box;
+}
+.return-button, .continue-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.return-button {
+    background-color: var(--accent-orange);
+    color: var(--dark-text);
 }
 
 .continue-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #4a90e2;
+    background-color: var(--mint-green);
+    color: var(--dark-text);
+}
+
+.return-button:hover, .continue-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+.feedback-message {
+    place-content: center;
+    padding: 1rem;
+    margin: 2rem 2rem 2rem 2rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    width: 89%;
+}
+
+.feedback-message.correct {
+    background-color: var(--mint-green);
+    color: var(--dark-text);
+}
+
+.feedback-message.incorrect {
+    background-color: var(--error-red);
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
-.continue-button:hover {
-    background: #357abd;
-}
-
-/* Typewriter Effect */
-.typing {
-    border-right: 2px solid #000;
-    animation: blink 0.75s step-end infinite;
-}
-
-@keyframes blink {
-    from, to { border-color: transparent }
-    50% { border-color: black; }
-}
-
-.nav-button { background-color: #7b0404; color: white; }
-.skip-button { background-color: #000000; color: white; }
-.nav-button:hover:not(:disabled), .skip-button:hover { opacity: 0.8; }
-.nav-button:disabled { background-color: #cccccc; cursor: not-allowed; }
-
-.nav-button:hover:not(:disabled),
-.skip-button:hover {
-    opacity: 0.8;
-}
-
-/* Responsiveness for Smaller Screens */
+/* Responsive Design */
 @media (max-width: 768px) {
+    .level-grid {
+        gap: 3rem;
+    }
+    
     .dialogue-box {
-        width: 90%;
+        padding: 1.5rem;
     }
-
-    .choices-container {
-        width: 80%;
-    }
-
+    
     .choice-button {
-        font-size: 0.9rem;
-    }
-
-    .continue-button {
-        font-size: 0.9rem;
+        padding: 0.875rem 1.25rem;
     }
 }
 
-
+@media (max-width: 480px) {
+    .level-button {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    
+    .game-container {
+        margin: 1rem;
+    }
+    
+    .scene-background {
+        padding: 1rem;
+    }
+}
