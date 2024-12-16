@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level1 Section</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: #ffffff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .content img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        p {
+            font-size: 20px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin: 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .chinese-word {
+            cursor: help; 
+            background-color: lightskyblue; 
+            padding: 0 2px; 
+            margin: 0 2px; 
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: black;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <img id="image" src="/" alt="Current image">
+            <p id="text">At the convenience store</p>
+            <div class="buttons">
+                <button onclick="location.href='page2.php'">Quit</button>
+                <button id="nextButton" onclick="next()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const images = ["https://i.pinimg.com/736x/9e/21/79/9e2179ce78668183df291e2ea45f9fd4.jpg"];
+    const texts = [
+    "Hi! Do you need help finding something?",
+    "Yes, I’m looking for some 零食 and 飲料 for a road trip.",
+    "We have a great selection! The 零食 are on aisle 3, and the 冷藏的飲料 are in the fridge section at the back.",
+    "Perfect! I also need a 充電器 for my phone. Do you have those?",
+    "Yes, we do. The 充電器 are near the 收銀台, next to the 電子產品.",
+    "Great! I’ll grab one of those too. Oh, and where can I find some 護手霜?",
+    "The 護手霜 is in the personal care section, aisle 5, along with 洗髮精 and 沐浴乳.",
+    "Thanks! I think I’ve got everything I need. Can I pay with 行動支付?",
+    "Of course! We accept 行動支付, 現金, and 信用卡 at the 收銀台.",
+    "Awesome. I’ll head to the 收銀台 now to check out.",
+    "Have a great day! Hope your road trip goes smoothly."
+];
+    
+let currentIndex = 0;
+
+
+function next() {
+    currentIndex++;
+    updateContent();
+
+if (currentIndex === texts.length - 1) {
+    document.getElementById("nextButton").disabled = true;
+        }
+    }
+
+    function updateContent() {
+        document.getElementById("text").textContent = texts[currentIndex];
+        playTextToSpeech(texts[currentIndex]);
+        addChineseWordTooltips();
+}
+
+    function playTextToSpeech(text) {
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en&client=gtx`;
+            const audio = new Audio(url);
+            audio.play();
+        }
+
+    function addChineseWordTooltips() {
+            const textElement = document.getElementById("text");
+            const chineseRegex = /[\u4e00-\u9fa5]+/g;
+            const matches = textElement.textContent.match(chineseRegex);
+
+    if (matches) {
+        let htmlContent = textElement.textContent;
+        matches.forEach(chineseWord => {
+        htmlContent = htmlContent.replace(chineseWord,
+         `<span class="chinese-word" data-word="${chineseWord}">
+            ${chineseWord}
+            <span class="tooltip">Fetching...</span>
+            </span>`
+                    );
+});
+
+        textElement.innerHTML = htmlContent;
+
+    document.querySelectorAll('.chinese-word').forEach(wordElement => {
+    wordElement.addEventListener('mouseenter', async (e) => {
+    const tooltip = e.currentTarget.querySelector('.tooltip');
+    const chineseWord = e.currentTarget.getAttribute('data-word');
+    tooltip.style.display = 'block';
+    tooltip.textContent = await fetchChineseTranslation(chineseWord);
+});
+
+    wordElement.addEventListener('mouseleave', (e) => {
+    const tooltip = e.currentTarget.querySelector('.tooltip');
+    tooltip.style.display = 'none';
+            });
+        });
+    }
+}
+
+    async function fetchChineseTranslation(word) {
+        try {
+    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=zh|en`);
+        const data = await response.json();
+            return data.responseData.translatedText || 'No translation available';
+} catch (error) {
+        console.error('Translation API error:', error);
+        return 'Translation unavailable';
+            }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("image").src = images[0];
+        updateContent();
+        document.getElementById("nextButton").disabled = false;
+});
+    </script>
+</body>
+</html>
