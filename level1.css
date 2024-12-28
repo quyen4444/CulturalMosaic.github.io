@@ -128,7 +128,7 @@ body {
 
 .thecard {
     width: 260px;
-    height: 380px;
+    height: 400px;
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.6s;
@@ -142,8 +142,8 @@ body {
 
 .thecard h2 {
     font-size: 2.5em;
-    margin-bottom: 15px;
-    font-weight: 700;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 .sound-button {
     background: transparent;
@@ -223,60 +223,120 @@ body {
 }
   
 .button-group {
-        display: flex;
-        gap: 30px;
-        justify-content: center;
-        margin-top: 10px;
-    }
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 10px;
+}
 
-    .sound-button, .record-button {
-        padding: 8px;
-        border: none;
-        border-radius: 50%;
-        color: black;
-        background: #ffffff;
-        cursor: pointer;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
+.sound-button, .record-button {
+    padding: 8px;
+    border: none;
+    border-radius: 50%;
+    color: black;
+    background: #ffffff;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
 
-    .record-button.recording {
-        background: #ff4444;
-        animation: pulse 1s infinite;
-    }
 
-    .score-results {
-        margin-top: 10px;
-        padding: 10px;
-        background: #f5f5f5;
-        border-radius: 5px;
-    }
-    
-    .final-score {
-        font-size: 1.2em;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-    
-    .score-details {
-        font-size: 0.9em;
-        color: #666;
-    }
-    
-    .score-details div {
-        margin: 2px 0;
-    }
+.record-button.recording {
+    background: rgba(255, 68, 68, 0.2);
+    border-color: #ff4444;
+    animation: pulse 1.5s infinite;
+}
 
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
+.record-button.recording i {
+    color: #ff4444;
+}
 
+/* Score Display Styles */
+.score-display {
+    margin-top: 8px;
+    width: 100%;
+    font-size: 12px;
+}
+
+.score-results {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+}
+
+.final-score {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.score-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
+    text-align: center; /* Center-align text in each column */
+    gap: 5px; /* Add space between columns */
+    color: #444;
+}
+
+.score-details div {
+    display: flex;
+    flex-direction: column; /* Stack header and content */
+}
+
+.score-details div span {
+    font-weight: bold; /* Highlight the header */
+    color: #666;
+    margin-bottom: 4px; /* Add spacing between header and content */
+}
+
+
+.feedback {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-style: italic;
+    color: #666;
+}
+
+/* Animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 68, 68, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
+    }
+}
+
+/* Loading State */
+.listening {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    animation: fadeInOut 1.5s infinite;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
 
 /* Main game container DIALOGUE STARTS HERE */
 #dialogue-game-section {
